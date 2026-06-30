@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Block_Over_Balance</fullName>
+    <active>false</active>
+    <description>Prevents requests exceeding available balance</description>
+    <errorConditionFormula>Days_to_Deduct__c &gt; Current_Balance_Available__c</errorConditionFormula>
+    <errorMessage>You cannot request more days than your available balance.</errorMessage>
+</ValidationRule>

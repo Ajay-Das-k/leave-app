@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Min_Notice_Days</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND(
+  NOT(ISBLANK(Leave_Type__c)),
+  NOT(ISBLANK(Leave_Type__r.Min_Notice_Days__c)),
+  (From_Date__c - TODAY()) &lt; Leave_Type__r.Min_Notice_Days__c
+)</errorConditionFormula>
+    <errorMessage>This leave type requires more advance notice. Please check the policy.</errorMessage>
+</ValidationRule>

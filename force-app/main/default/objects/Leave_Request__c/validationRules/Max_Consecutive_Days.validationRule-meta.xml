@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Max_Consecutive_Days</fullName>
+    <active>true</active>
+    <errorConditionFormula>AND(
+  NOT(ISBLANK(Leave_Type__c)),
+  NOT(ISBLANK(Leave_Type__r.Maximum_Consecutive_Days__c)),
+  Number_of_Days__c &gt; Leave_Type__r.Maximum_Consecutive_Days__c
+)</errorConditionFormula>
+    <errorMessage>You cannot apply more than the allowed consecutive days for this leave type.</errorMessage>
+</ValidationRule>
