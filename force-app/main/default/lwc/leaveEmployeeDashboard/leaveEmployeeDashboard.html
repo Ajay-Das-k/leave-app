@@ -346,6 +346,7 @@
                                     <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table--header-fixed">
                                          <thead>
                                              <tr class="slds-line-height_reset">
+                                                 <th scope="col" style="width: 50px;"></th>
                                                  <th scope="col"><div class="slds-truncate slds-cell-fixed" title="Ticket Number">Ticket Number</div></th>
                                                  <th scope="col"><div class="slds-truncate slds-cell-fixed" title="Hardware">Hardware</div></th>
                                                  <th scope="col"><div class="slds-truncate slds-cell-fixed" title="Status">Status</div></th>
@@ -357,8 +358,13 @@
                                          <tbody>
                                              <template for:each={myHardwareTickets} for:item="ticket">
                                                  <tr key={ticket.Id}>
+                                                     <td>
+                                                         <template if:true={ticket.hardwareImageUrl}>
+                                                             <img src={ticket.hardwareImageUrl} style="width: 35px; height: 35px; border-radius: 4px; object-fit: cover;">
+                                                         </template>
+                                                     </td>
                                                      <td data-label="Ticket Number"><strong>{ticket.Name}</strong></td>
-                                                     <td data-label="Hardware">{ticket.Hardware__r.Name}</td>
+                                                     <td data-label="Hardware">{ticket.hardwareName}</td>
                                                      <td data-label="Status">{ticket.Status__c}</td>
                                                      <td data-label="Notes"><div class="slds-truncate" title={ticket.Notes__c}>{ticket.Notes__c}</div></td>
                                                      <td data-label="Date"><lightning-formatted-date-time value={ticket.CreatedDate} year="numeric" month="short" day="2-digit"></lightning-formatted-date-time></td>

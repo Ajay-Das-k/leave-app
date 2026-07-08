@@ -255,7 +255,7 @@ public without sharing class HardwareController {
     public static List<Hardware_Request__c> getHardwareTickets(String callerId) {
         SecurityMiddleware.verifyAdminOrHROrManager(callerId);
         try {
-            return [SELECT Id, Name, Employee__c, Employee__r.Name, Hardware__c, Hardware__r.Name, Status__c, Notes__c, CreatedDate 
+            return [SELECT Id, Name, Employee__c, Employee__r.Name, Hardware__c, Hardware__r.Name, Hardware__r.Image_URL__c, Status__c, Notes__c, CreatedDate 
                     FROM Hardware_Request__c 
                     WHERE Is_Ticket__c = true
                     ORDER BY CreatedDate DESC];
@@ -267,7 +267,7 @@ public without sharing class HardwareController {
     @AuraEnabled(cacheable=true)
     public static List<Hardware_Request__c> getEmployeeHardwareTickets(String contactId) {
         try {
-            return [SELECT Id, Name, Hardware__c, Hardware__r.Name, Status__c, Notes__c, CreatedDate 
+            return [SELECT Id, Name, Hardware__c, Hardware__r.Name, Hardware__r.Image_URL__c, Status__c, Notes__c, CreatedDate 
                     FROM Hardware_Request__c 
                     WHERE Employee__c = :contactId AND Is_Ticket__c = true
                     ORDER BY CreatedDate DESC];

@@ -108,7 +108,11 @@ export default class LeaveEmployeeDashboard extends LightningElement {
     wiredHardwareTickets(result) {
         this.wiredHardwareTicketsResult = result;
         if (result.data) {
-            this.myHardwareTickets = result.data;
+            this.myHardwareTickets = result.data.map(ticket => ({
+                ...ticket,
+                hardwareName: ticket.Hardware__r ? ticket.Hardware__r.Name : 'Deleted Hardware',
+                hardwareImageUrl: ticket.Hardware__r ? ticket.Hardware__r.Image_URL__c : ''
+            }));
         } else if (result.error) {
             console.error('Error fetching hardware tickets', result.error);
         }
