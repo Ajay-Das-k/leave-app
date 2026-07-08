@@ -48,6 +48,17 @@ public without sharing class SecurityMiddleware {
     }
 
     private static Contact getContact(String contactId) {
+        // Bypass if running user is System Administrator
+        Id profileId = UserInfo.getProfileId();
+        Profile p = [SELECT Name FROM Profile WHERE Id = :profileId LIMIT 1];
+        if (p.Name == 'System Administrator') {
+            return new Contact(
+                LastName = 'System Admin',
+                Portal_Access_Type__c = 'Admin;HR;Manager;Employee',
+                Is_Technical_System_Admin__c = true
+            );
+        }
+
         if (String.isBlank(contactId)) {
             throw new SecurityException('Authentication required. Missing Contact ID.');
         }
