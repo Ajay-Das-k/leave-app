@@ -904,14 +904,14 @@ export default class LeaveManagerDashboard extends LightningElement {
         this.wiredPendingResult = result;
         if (result.data) {
             this.pendingLeaves = result.data.map(l => {
-                let empName = l.Employee__r.Name;
+                let empName = l.Employee__r ? l.Employee__r.Name : 'Deleted Employee';
                 let init = empName ? empName.split(' ').map(n=>n[0]).join('').substring(0,2).toUpperCase() : 'U';
                 return { 
                     ...l, 
                     contactName: empName, 
-                    profilePicUrl: l.Employee__r.Profile_Picture_URL__c,
+                    profilePicUrl: l.Employee__r ? l.Employee__r.Profile_Picture_URL__c : '',
                     initials: init,
-                    LeaveType: l.Leave_Type__r.Name,
+                    LeaveType: l.Leave_Type__r ? l.Leave_Type__r.Name : '',
                     isCancellation: l.Status__c === 'Cancellation Requested',
                     approveActionLabel: l.Status__c === 'Cancellation Requested' ? 'Confirm Cancel' : 'Approve'
                 };
