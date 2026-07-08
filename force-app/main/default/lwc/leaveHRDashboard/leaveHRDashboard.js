@@ -471,11 +471,18 @@ export default class LeaveHRDashboard extends LightningElement {
         if (!this.currentUser) return;
         getHardwareRequests({ callerId: this.currentUser.contactId })
             .then(result => {
-                this.escalatedRequests = result.filter(r => r.Status__c === 'Pending HR/Manager' || r.Status__c === 'Escalated to Manager' || r.Status__c === 'Pending Manager' || r.Status__c === 'Forwarded to HR/Manager');
+                this.escalatedRequests = result.filter(r => r.Status__c === 'Pending HR/Manager' || r.Status__c === 'Escalated to Manager' || r.Status__c === 'Pending Manager' || r.Status__c === 'Forwarded to HR/Manager').map(r => ({
+                    ...r,
+                    employeeName: r.Employee__r ? r.Employee__r.Name : 'Deleted Employee',
+                    employeeId: r.Employee__r ? r.Employee__r.Employee_ID__c : 'N/A',
+                    employeeDepartment: r.Employee__r ? r.Employee__r.Department__c : 'N/A',
+                    employeePosition: r.Employee__r ? r.Employee__r.Position__c : 'N/A'
+                }));
                 this.solvedRequests = result.filter(r => r.Status__c === 'Approved' || r.Status__c === 'Rejected' || r.Status__c === 'Fulfilled').map(r => ({
                     ...r,
                     formattedDate: new Date(r.CreatedDate).toLocaleDateString(),
-                    isDeliverable: r.Status__c === 'Approved'
+                    isDeliverable: r.Status__c === 'Approved',
+                    employeeName: r.Employee__r ? r.Employee__r.Name : 'Deleted Employee'
                 }));
             })
             .catch(error => {
@@ -490,11 +497,15 @@ export default class LeaveHRDashboard extends LightningElement {
                 this.escalatedTickets = result.filter(t => t.Status__c === 'Forwarded to HR/Manager').map(t => ({
                     ...t,
                     isResolvedByAdmin: false,
-                    adminName: ''
+                    adminName: '',
+                    hardwareName: t.Hardware__r ? t.Hardware__r.Name : 'Deleted Hardware',
+                    employeeName: t.Employee__r ? t.Employee__r.Name : 'Deleted Employee'
                 }));
                 this.solvedTickets = result.filter(t => t.Status__c === 'Solved by Admin' || t.Status__c === 'Solved by HR/Manager' || t.Status__c === 'Hardware will be Delivered').map(t => ({
                     ...t,
-                    formattedDate: new Date(t.CreatedDate).toLocaleDateString()
+                    formattedDate: new Date(t.CreatedDate).toLocaleDateString(),
+                    hardwareName: t.Hardware__r ? t.Hardware__r.Name : 'Deleted Hardware',
+                    employeeName: t.Employee__r ? t.Employee__r.Name : 'Deleted Employee'
                 }));
             })
             .catch(error => {

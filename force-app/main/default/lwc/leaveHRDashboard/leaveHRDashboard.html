@@ -584,12 +584,12 @@
                                                     <span class="slds-badge slds-theme_warning">{req.Status__c}</span>
                                                 </div>
                                                 <div class="slds-m-top_small">
-                                                    <p><strong>Employee:</strong> {req.Employee__r.Name}</p>
-                                                    <template if:true={req.Employee__r.Department__c}>
-                                                        <p><strong>Department:</strong> {req.Employee__r.Department__c}</p>
+                                                    <p><strong>Employee:</strong> {req.employeeName}</p>
+                                                    <template if:true={req.employeeDepartment}>
+                                                        <p><strong>Department:</strong> {req.employeeDepartment}</p>
                                                     </template>
-                                                    <template if:true={req.Employee__r.Position__c}>
-                                                        <p><strong>Position:</strong> {req.Employee__r.Position__c}</p>
+                                                    <template if:true={req.employeePosition}>
+                                                        <p><strong>Position:</strong> {req.employeePosition}</p>
                                                     </template>
                                                     <p><strong>Date:</strong> <lightning-formatted-date-time value={req.CreatedDate} year="numeric" month="short" day="2-digit"></lightning-formatted-date-time></p>
                                                     <template if:true={req.Admin_Comment__c}>
@@ -632,7 +632,7 @@
                                         <div key={ticket.Id} class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-3 slds-m-bottom_medium">
                                             <div class="slds-box slds-box_x-small" style="background:#f4f6f9; border-radius:8px;">
                                                 <div class="slds-grid slds-grid_align-spread">
-                                                    <strong>{ticket.Name} - {ticket.Hardware__r.Name}</strong>
+                                                    <strong>{ticket.Name} - {ticket.hardwareName}</strong>
                                                     <div>
                                                         <template if:true={ticket.isResolvedByAdmin}>
                                                             <span class="slds-badge slds-theme_success slds-m-right_xx-small">Resolved by {ticket.adminName}</span>
@@ -641,7 +641,7 @@
                                                     </div>
                                                 </div>
                                                 <div class="slds-m-top_small">
-                                                     <p><strong>Employee:</strong> {ticket.Employee__r.Name}</p>
+                                                     <p><strong>Employee:</strong> {ticket.employeeName}</p>
                                                      <p><strong>Date:</strong> <lightning-formatted-date-time value={ticket.CreatedDate} year="numeric" month="short" day="2-digit"></lightning-formatted-date-time></p>
                                                      <p class="slds-m-top_x-small"><strong>Notes / Details:</strong><br/>{ticket.Notes__c}</p>
                                                  </div>
@@ -681,8 +681,8 @@
                                                         <span class="slds-badge slds-theme_success">{req.Status__c}</span>
                                                     </div>
                                                     <div class="slds-m-top_small">
-                                                        <p><strong>Employee:</strong> {req.Employee__r.Name}</p>
-                                                        <p><strong>Date:</strong> {req.formattedDate}</p>
+                                                         <p><strong>Employee:</strong> {req.employeeName}</p>
+                                                         <p><strong>Date:</strong> {req.formattedDate}</p>
                                                         <template if:true={req.Admin_Comment__c}>
                                                             <p><strong>Admin Comment:</strong> {req.Admin_Comment__c}</p>
                                                         </template>
@@ -717,11 +717,11 @@
                                             <div key={ticket.Id} class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-3 slds-m-bottom_medium">
                                                 <div class="slds-box slds-box_x-small" style="background:#f4f6f9; border-radius:8px; border-left: 4px solid #10b981;">
                                                     <div class="slds-grid slds-grid_align-spread">
-                                                        <strong>{ticket.Name} - {ticket.Hardware__r.Name}</strong>
+                                                        <strong>{ticket.Name} - {ticket.hardwareName}</strong>
                                                         <span class="slds-badge slds-theme_success">{ticket.Status__c}</span>
                                                     </div>
                                                     <div class="slds-m-top_small">
-                                                        <p><strong>Employee:</strong> {ticket.Employee__r.Name}</p>
+                                                        <p><strong>Employee:</strong> {ticket.employeeName}</p>
                                                         <p><strong>Date:</strong> {ticket.formattedDate}</p>
                                                         <p class="slds-m-top_x-small"><strong>Notes / Details:</strong><br/>{ticket.Notes__c}</p>
                                                     </div>

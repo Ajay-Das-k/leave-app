@@ -992,7 +992,12 @@ export default class LeaveManagerDashboard extends LightningElement {
         if (!this.currentUser) return;
         getHardwareRequests({ callerId: this.currentUser.contactId })
             .then(result => {
-                this.escalatedRequests = result.filter(r => r.Status__c === 'Pending HR/Manager' || r.Status__c === 'Escalated to Manager' || r.Status__c === 'Pending Manager' || r.Status__c === 'Forwarded to HR/Manager');
+                this.escalatedRequests = result.filter(r => r.Status__c === 'Pending HR/Manager' || r.Status__c === 'Escalated to Manager' || r.Status__c === 'Pending Manager' || r.Status__c === 'Forwarded to HR/Manager').map(r => ({
+                    ...r,
+                    employeeName: r.Employee__r ? r.Employee__r.Name : 'Deleted Employee',
+                    employeeDepartment: r.Employee__r ? r.Employee__r.Department__c : 'N/A',
+                    employeePosition: r.Employee__r ? r.Employee__r.Position__c : 'N/A'
+                }));
             })
             .catch(error => {
                 console.error('Error fetching hardware requests:', error);
@@ -1008,7 +1013,9 @@ export default class LeaveManagerDashboard extends LightningElement {
                 ).map(t => ({
                     ...t,
                     isResolvedByAdmin: false,
-                    adminName: ''
+                    adminName: '',
+                    hardwareName: t.Hardware__r ? t.Hardware__r.Name : 'Deleted Hardware',
+                    employeeName: t.Employee__r ? t.Employee__r.Name : 'Deleted Employee'
                 }));
             })
             .catch(error => {
