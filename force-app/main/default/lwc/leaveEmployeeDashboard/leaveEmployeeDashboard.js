@@ -69,6 +69,8 @@ export default class LeaveEmployeeDashboard extends LightningElement {
     @track hardwareDescription = '';
     @track isTicketModalOpen = false;
     @track ticketDescription = '';
+    @track isHardwareDetailModalOpen = false;
+    @track selectedHardwareDetail = {};
     @track selectedHardwareIdForTicket = null;
 
     hardwareTypeOptions = [
@@ -97,7 +99,22 @@ export default class LeaveEmployeeDashboard extends LightningElement {
     wiredAssignedHardware(result) {
         this.wiredAssignedHardwareResult = result;
         if (result.data) {
-            this.myAssignedHardware = result.data;
+            this.myAssignedHardware = result.data.map(hw => {
+                const rawPercent = hw.Life_Span_Consumed_Percentage__c != null ? hw.Life_Span_Consumed_Percentage__c : 0;
+                const pct = Math.round(rawPercent > 1 ? rawPercent : rawPercent * 100);
+                
+                let badgeClass = 'slds-badge ';
+                if (pct < 50) badgeClass += 'slds-theme_success';
+                else if (pct < 85) badgeClass += 'slds-theme_warning';
+                else badgeClass += 'slds-theme_error';
+                
+                return {
+                    ...hw,
+                    LifeUsed: pct + '%',
+                    lifeUsedRaw: pct,
+                    lifeUsedBadgeClass: badgeClass
+                };
+            });
         } else if (result.error) {
             console.error('Error fetching assigned hardware', result.error);
         }
@@ -644,5 +661,19 @@ export default class LeaveEmployeeDashboard extends LightningElement {
                 this.showToast('Error', error.body?.message || error.message, 'error');
             }
         }
+    }
+
+    handleHardwareNameClick(event) {
+        const hwId = event.currentTarget.dataset.id;
+        const hw = this.myAssignedHardware.find(item => item.Id === hwId);
+        if (hw) {
+            this.selectedHardwareDetail = hw;
+            this.isHardwareDetailModalOpen = true;
+        }
+    }
+
+    closeHardwareDetailModal() {
+        this.isHardwareDetailModalOpen = false;
+        this.selectedHardwareDetail = {};
     }
 }

@@ -198,7 +198,8 @@ public without sharing class HardwareController {
     @AuraEnabled(cacheable=true)
     public static List<Hardware__c> getEmployeeAssignedHardware(String contactId) {
         try {
-            List<Hardware__c> items = [SELECT Id, Name, Type__c, Serial_Number__c, Image_URL__c, Date_Assigned__c, Username__c, Password__c 
+            List<Hardware__c> items = [SELECT Id, Name, Type__c, Serial_Number__c, Image_URL__c, Date_Assigned__c, Username__c, Password__c,
+                                              Location__c, Year_of_Manufacture__c, Expected_Life_Span_Years__c, OS__c, Life_Span_Consumed_Percentage__c, Notes__c 
                     FROM Hardware__c 
                     WHERE Assigned_To__c = :contactId
                     ORDER BY Date_Assigned__c DESC];
