@@ -1,27 +1,29 @@
 <template>
     <div class="dashboard-wrapper">
         <!-- Profile Header -->
-        <div class="welcome-section profile-card" style="display:flex; justify-content:space-between; align-items:center;">
-            <div class="profile-info" style="display:flex; align-items:center; gap:15px;">
-                <template if:true={profileData.profilePictureUrl}>
-                    <img src={profileData.profilePictureUrl} style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.1);" alt="Profile" />
-                </template>
-                <div>
-                    <h2>Welcome, <strong>{userName}!</strong></h2>
-                    <p>Your Leave Dashboard | {currentUser.employeeId} | {currentUser.department}</p>
-                    <div class="profile-completion slds-m-top_small" style="max-width: 300px;">
-                        <span class="slds-text-body_small">Profile Completion: {profileCompletion}%</span>
-                        <lightning-progress-bar value={profileCompletion} size="small" variant="circular"></lightning-progress-bar>
+        <template if:false={hideHeader}>
+            <div class="welcome-section profile-card" style="display:flex; justify-content:space-between; align-items:center;">
+                <div class="profile-info" style="display:flex; align-items:center; gap:15px;">
+                    <template if:true={profileData.profilePictureUrl}>
+                        <img src={profileData.profilePictureUrl} style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.1);" alt="Profile" />
+                    </template>
+                    <div>
+                        <h2>Welcome, <strong>{userName}!</strong></h2>
+                        <p>Your Leave Dashboard | {currentUser.employeeId} | {currentUser.department}</p>
+                        <div class="profile-completion slds-m-top_small" style="max-width: 300px;">
+                            <span class="slds-text-body_small">Profile Completion: {profileCompletion}%</span>
+                            <lightning-progress-bar value={profileCompletion} size="small" variant="circular"></lightning-progress-bar>
+                        </div>
                     </div>
                 </div>
+                <div>
+                    <template if:false={isProfileComplete}>
+                        <button class="view-profile-btn slds-m-right_small" onclick={openProfile} style="background-color:#ff9800;">Complete Profile</button>
+                    </template>
+                    <button class="view-profile-btn" onclick={openProfile}>My Profile</button>
+                </div>
             </div>
-            <div>
-                <template if:false={isProfileComplete}>
-                    <button class="view-profile-btn slds-m-right_small" onclick={openProfile} style="background-color:#ff9800;">Complete Profile</button>
-                </template>
-                <button class="view-profile-btn" onclick={openProfile}>My Profile</button>
-            </div>
-        </div>
+        </template>
 
 
 

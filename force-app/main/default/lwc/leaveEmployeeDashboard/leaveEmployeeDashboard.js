@@ -23,6 +23,7 @@ import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 
 export default class LeaveEmployeeDashboard extends LightningElement {
     @api currentUser; 
+    @api hideHeader = false; 
     
     @track annualLeaveBal = 0;
     @track sickLeaveBal = 0;
