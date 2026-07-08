@@ -431,6 +431,11 @@ public without sharing class PaybookLoginController {
                     mail.setSaveAsActivity(false);
                     mail.setSubject('Congratulations on your new Role(s)!');
                     
+                    List<OrgWideEmailAddress> owaList = [SELECT Id FROM OrgWideEmailAddress WHERE IsVerified = true LIMIT 1];
+                    if (!owaList.isEmpty()) {
+                        mail.setOrgWideEmailAddressId(owaList[0].Id);
+                    }
+                    
                     String formattedRoles = String.isNotBlank(newPositions) ? newPositions.replaceAll(';', ', ') : 'No roles assigned';
                     
                     String body = 'Dear ' + (String.isNotBlank(empDetails.FirstName) ? empDetails.FirstName : 'Employee') + ',\n\n' +

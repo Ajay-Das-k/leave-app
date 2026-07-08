@@ -329,6 +329,11 @@ public without sharing class PaybookSignupController {
                 mail.setSaveAsActivity(false);
                 mail.setSubject('Welcome to Leave App - Your Account Details');
                 
+                List<OrgWideEmailAddress> owaList = [SELECT Id FROM OrgWideEmailAddress WHERE IsVerified = true LIMIT 1];
+                if (!owaList.isEmpty()) {
+                    mail.setOrgWideEmailAddressId(owaList[0].Id);
+                }
+                
                 String body = 'Dear ' + firstName + ',\n\n' +
                     'Welcome to the Leave Management Application.\n\n' +
                     'Your employee portal account has been created. Here are your credentials to log in:\n' +
