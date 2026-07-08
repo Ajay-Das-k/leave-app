@@ -882,12 +882,14 @@
                                                                 <div class="slds-grid slds-wrap slds-gutters_xx-small">
                                                                     <template for:each={user.hardwareList} for:item="hw">
                                                                         <div key={hw.Id} class="slds-col slds-m-vertical_xx-small">
-                                                                            <span class="slds-badge slds-theme_light" style="padding: 0.3rem 0.6rem; border: 1px solid #dcdcdc; border-radius: 4px; display: inline-flex; align-items: center; gap: 6px;">
-                                                                                <strong>{hw.Name}</strong> 
-                                                                                <span style="font-size: 0.75rem; color: #555;">({hw.Type__c})</span>
-                                                                                <template if:true={hw.Serial_Number__c}>
-                                                                                    <span style="font-size: 0.7rem; color: #888;">S/N: {hw.Serial_Number__c}</span>
-                                                                                </template>
+                                                                            <span class="slds-badge slds-theme_light" onclick={handleHardwareNameClick} data-id={hw.Id} style="padding: 0.3rem 0.6rem; border: 1px solid #dcdcdc; border-radius: 4px; display: inline-flex; align-items: center; gap: 6px; cursor: pointer;">
+                                                                                <a href="javascript:void(0);" style="text-decoration: none; color: inherit; display: inline-flex; align-items: center; gap: 6px;">
+                                                                                    <strong>{hw.Name}</strong> 
+                                                                                    <span style="font-size: 0.75rem; color: #555;">({hw.Type__c})</span>
+                                                                                    <template if:true={hw.Serial_Number__c}>
+                                                                                        <span style="font-size: 0.7rem; color: #888;">S/N: {hw.Serial_Number__c}</span>
+                                                                                    </template>
+                                                                                </a>
                                                                             </span>
                                                                         </div>
                                                                     </template>
