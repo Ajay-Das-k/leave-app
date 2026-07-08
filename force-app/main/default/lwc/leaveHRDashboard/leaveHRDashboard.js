@@ -120,6 +120,8 @@ export default class LeaveHRDashboard extends LightningElement {
     @track selectedHwStatus = 'All';
     @track hardwareViewMode = 'all';
     @track hardwareLoading = false;
+    @track isHardwareDetailModalOpen = false;
+    @track selectedHardwareDetail = {};
 
     typeOptions = [
         { label: 'Laptop', value: 'Laptop' },
@@ -1259,10 +1261,20 @@ export default class LeaveHRDashboard extends LightningElement {
                     else if (hw.Status__c === 'Under Maintenance') badgeClass += 'slds-theme_warning';
                     else if (hw.Status__c === 'Retired') badgeClass += 'slds-theme_error';
                     
+                    const rawPercent = hw.Life_Span_Consumed_Percentage__c != null ? hw.Life_Span_Consumed_Percentage__c : 0;
+                    const pct = Math.round(rawPercent > 1 ? rawPercent : rawPercent * 100);
+                    let lifeBadgeClass = 'slds-badge ';
+                    if (pct < 50) lifeBadgeClass += 'slds-theme_success';
+                    else if (pct < 85) lifeBadgeClass += 'slds-theme_warning';
+                    else lifeBadgeClass += 'slds-theme_error';
+
                     return {
                         ...hw,
                         AssignedToName: hw.Assigned_To__r ? hw.Assigned_To__r.Name : '-',
-                        statusBadgeClass: badgeClass
+                        statusBadgeClass: badgeClass,
+                        LifeUsed: pct + '%',
+                        lifeUsedRaw: pct,
+                        lifeUsedBadgeClass: lifeBadgeClass
                     };
                 });
                 this.filterHardwareReport();
@@ -1426,5 +1438,19 @@ export default class LeaveHRDashboard extends LightningElement {
         } finally {
             this.isLoading = false;
         }
+    }
+
+    handleHardwareNameClick(event) {
+        const hwId = event.currentTarget.dataset.id;
+        const hw = this.hardwareData.find(item => item.Id === hwId);
+        if (hw) {
+            this.selectedHardwareDetail = hw;
+            this.isHardwareDetailModalOpen = true;
+        }
+    }
+
+    closeHardwareDetailModal() {
+        this.isHardwareDetailModalOpen = false;
+        this.selectedHardwareDetail = {};
     }
 }
