@@ -1,0 +1,377 @@
+<template>
+    <div class="login-container">
+        <div class="login-card">
+            <!-- Header -->
+            <div class="login-header">
+                <h1>Leave App</h1>
+                <p>Leave Management System</p>
+            </div>
+
+            <!-- LOGIN MODE -->
+            <template if:true={isLoginMode}>
+                <form onsubmit={handleLogin}>
+                    <div class="form-group">
+                        <label for="employeeId">Employee ID</label>
+                        <input 
+                            id="employeeId"
+                            type="text" 
+                            value={employeeId} 
+                            onchange={handleEmployeeIdChange}
+                            placeholder="e.g., CT49"
+                            required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input 
+                            id="password"
+                            type="password" 
+                            value={password} 
+                            onchange={handlePasswordChange}
+                            placeholder="Enter your password"
+                            required>
+                    </div>
+                    
+                    <template if:true={showError}>
+                        <div class="error-message">
+                            {errorMessage}
+                        </div>
+                    </template>
+                    
+                    <button type="submit" class="login-button" disabled={isLoading}>
+                        <template if:true={isLoading}>
+                            <span class="spinner"></span> Logging in...
+                        </template>
+                        <template if:false={isLoading}>
+                            Login
+                        </template>
+                    </button>
+                </form>
+            
+                <div class="toggle-mode">
+                    <p>
+                        <a href="javascript:void(0);" onclick={toggleForgotPassword}>Forgot Password?</a>
+                    </p>
+                </div>
+            </template>
+
+            <!-- FORGOT PASSWORD MODE -->
+            <template if:true={isForgotPasswordMode}>
+                <div class="login-header">
+                    <h2>Reset Password</h2>
+                </div>
+                <form onsubmit={handleResetPassword}>
+                    <div class="form-group">
+                        <label>Employee ID</label>
+                        <input type="text" data-id="resetEmployeeId" onchange={handleResetEmployeeIdChange} value={resetEmployeeId} placeholder="e.g., CT49" required disabled={otpRequested}>
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" data-id="resetEmail" onchange={handleResetEmailChange} value={resetEmail} placeholder="your.email@company.com" required disabled={otpRequested}>
+                    </div>
+                    
+                    <template if:true={resetError}>
+                        <div class="error-message">{resetErrorMessage}</div>
+                    </template>
+                    <template if:true={resetSuccess}>
+                        <div class="success-message">{resetSuccessMessage}</div>
+                    </template>
+
+                    <template if:false={otpRequested}>
+                        <button type="button" class="login-button" onclick={handleRequestOTP} disabled={isLoading}>
+                            <template if:true={isLoading}>
+                                <span class="spinner"></span> Sending OTP...
+                            </template>
+                            <template if:false={isLoading}>Send OTP</template>
+                        </button>
+                    </template>
+
+                    <template if:true={otpRequested}>
+                        <div class="form-group">
+                            <label>Enter OTP</label>
+                            <input type="text" onchange={handleResetOTPChange} value={resetOTP} placeholder="6-digit OTP" required maxlength="6">
+                        </div>
+                        <div class="form-group">
+                            <label>New Password</label>
+                            <input type="password" data-id="resetNewPassword" onchange={handleResetNewPasswordChange} value={resetNewPassword} placeholder="Min 8 chars, 1 letter, 1 number" required>
+                        </div>
+                         <div class="form-group">
+                            <label>Confirm Password</label>
+                            <input type="password" data-id="resetConfirmPassword" onchange={handleResetConfirmPasswordChange} value={resetConfirmPassword} placeholder="Confirm new password" required>
+                        </div>
+
+                        <button type="submit" class="login-button" disabled={isLoading}>
+                            <template if:true={isLoading}>
+                                 <span class="spinner"></span> Resetting...
+                            </template>
+                            <template if:false={isLoading}>Reset Password</template>
+                        </button>
+                    </template>
+                </form>
+                <div class="toggle-mode">
+                    <p><a href="javascript:void(0);" onclick={toggleForgotPassword}>Back to Login</a></p>
+                </div>
+            </template>
+
+            <!-- FORCED PASSWORD RESET MODE -->
+            <template if:true={isForcePasswordChange}>
+                <div class="login-header">
+                    <h2>Welcome!</h2>
+                    <p>Please change your default password to continue.</p>
+                </div>
+                <form onsubmit={handleChangeDefaultPassword}>
+                    <div class="form-group">
+                        <label>New Password</label>
+                        <input type="password" data-id="forceNewPassword" onchange={handleForceNewPasswordChange} value={forceNewPassword} placeholder="Min 8 chars, 1 letter, 1 number" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Confirm Password</label>
+                        <input type="password" data-id="forceConfirmPassword" onchange={handleForceConfirmPasswordChange} value={forceConfirmPassword} placeholder="Confirm new password" required>
+                    </div>
+
+                    <template if:true={forceError}>
+                        <div class="error-message">{forceErrorMessage}</div>
+                    </template>
+                    <template if:true={forceSuccess}>
+                        <div class="success-message">{forceSuccessMessage}</div>
+                    </template>
+
+                    <button type="submit" class="login-button" disabled={isLoading}>
+                        <template if:true={isLoading}>
+                             <span class="spinner"></span> Updating...
+                        </template>
+                        <template if:false={isLoading}>Change Password</template>
+                    </button>
+                </form>
+            </template>
+
+
+
+             <!-- Logic note: Original file used if:true={isLoginMode} and if:false={isLoginMode}. 
+                  With 3 modes, better to use specific flags or a generic mode string.
+                  For minimal refactor, I will introduce isForgotPasswordMode and ensure other templates hide.
+                  Adjusting original `if:false={isLoginMode}` to `if:true={isSignupMode}` for clarity if I can change JS too. 
+                  OR, nest the logic. Let's assume strict separation.
+             -->
+            
+            <!-- RE-INJECTING SIGNUP MODE (as originally it was merely else of login) -->
+             <template if:true={isSignupMode}>
+                <form onsubmit={handleSignup}>
+                   <div class="form-row">
+                        <div class="form-group">
+                            <label for="firstName">First Name</label>
+                            <input 
+                                id="firstName"
+                                type="text" 
+                                value={firstName} 
+                                onchange={handleFirstNameChange}
+                                placeholder="First name"
+                                required>
+                        </div>
+                        <div class="form-group">
+                            <label for="lastName">Last Name</label>
+                            <input 
+                                id="lastName"
+                                type="text" 
+                                value={lastName} 
+                                onchange={handleLastNameChange}
+                                placeholder="Last name"
+                                required>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="signupEmail">Email</label>
+                        <input 
+                            id="signupEmail"
+                            type="email" 
+                            value={email} 
+                            onchange={handleEmailChange}
+                            placeholder="your.email@company.com"
+                            required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="signupEmployeeId">Employee ID</label>
+                        <input 
+                            id="signupEmployeeId"
+                            type="text" 
+                            value={employeeId} 
+                            onchange={handleSignupEmployeeIdChange}
+                            placeholder="e.g., CT49"
+                            required>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="department">Department</label>
+                            <select id="department" value={department} onchange={handleDepartmentChange}>
+                                <option value="">--Select--</option>
+                                <option value="Ad-Sales in a Box">Ad-Sales in a Box</option>
+                                <option value="TDS">TDS</option>
+                                <option value="AI">AI</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="employeeType">Employee Type</label>
+                            <select id="employeeType" value={employeeType} onchange={handleEmployeeTypeChange} required>
+                                <option value="">--Select--</option>
+                                <option value="Permanent">Permanent</option>
+
+                                <option value="Probation">Probation</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="gender">Gender</label>
+                            <select id="gender" value={gender} onchange={handleGenderChange} required>
+                                <option value="">--Select--</option>
+                                <option value="Male">Male</option>
+                                <option value="Female">Female</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="mobile">Mobile Number</label>
+                            <input 
+                                id="mobile"
+                                type="tel" 
+                                value={mobile} 
+                                onchange={handleMobileChange}
+                                placeholder="Mobile number">
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="birthdate">Date of Birth</label>
+                            <input 
+                                id="birthdate"
+                                type="date" 
+                                value={birthdate} 
+                                onchange={handleBirthdateChange}>
+                        </div>
+                        <div class="form-group">
+                            <label for="joiningDate">Joining Date</label>
+                            <input 
+                                id="joiningDate"
+                                type="date" 
+                                value={joiningDate} 
+                                onchange={handleJoiningDateChange}
+                                required>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="workLocation">Work Location</label>
+                            <select id="workLocation" value={workLocation} onchange={handleWorkLocationChange} required>
+                                <option value="">--Select--</option>
+                                <option value="Home">Home</option>
+                                <option value="Office">Office</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="profilePic">Profile Picture</label>
+                            <input 
+                                id="profilePic"
+                                type="file" 
+                                accept="image/*"
+                                onchange={handleProfilePicSelect}>
+                        </div>
+                    </div>
+
+                    <template if:true={showCropper}>
+                        <div class="cropper-container" style="text-align: center; margin: 10px 0; background: #f9f9f9; padding: 10px; border-radius: 8px;">
+                            <p style="font-size: 0.85rem; color: #666; margin-bottom: 8px;">Drag image to pan. Use slider to zoom.</p>
+                            <div style="width: 150px; height: 150px; overflow: hidden; border-radius: 50%; margin: 0 auto; border: 2px solid #ccc; position: relative;">
+                                <canvas class="crop-canvas" width="150" height="150" lwc:dom="manual"
+                                    onmousedown={handleCropDragStart}
+                                    onmousemove={handleCropDragMove}
+                                    onmouseup={handleCropDragEnd}
+                                    onmouseleave={handleCropDragEnd}
+                                    ontouchstart={handleCropDragStart}
+                                    ontouchmove={handleCropDragMove}
+                                    ontouchend={handleCropDragEnd}
+                                    style="cursor: move; touch-action: none; background: #eee;">
+                                </canvas>
+                            </div>
+                            <div style="margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 10px;">
+                                <label style="font-size: 0.85rem;">Zoom:</label>
+                                <input type="range" min="1" max="3" step="0.1" value={cropScale} oninput={handleCropScale} style="width: 120px;">
+                            </div>
+                            <button type="button" class="btn-secondary" onclick={applyCrop} style="margin-top: 10px; padding: 6px 12px; font-size: 0.9rem;">Confirm Crop</button>
+                        </div>
+                    </template>
+                    
+                    <template if:true={croppedImageBase64}>
+                        <div style="text-align: center; margin: 10px 0;">
+                            <p style="font-size: 0.85rem; color: green; margin-bottom: 5px;">✓ Profile Picture Ready</p>
+                            <img src={croppedImageBase64} style="width: 80px; height: 80px; border-radius: 50%; border: 2px solid #4CAF50;">
+                            <br>
+                            <button type="button" class="btn-text" onclick={removeProfilePic} style="color: #d9534f; font-size: 0.8rem; border: none; background: none; cursor: pointer; margin-top: 5px;">Remove</button>
+                        </div>
+                    </template>
+
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="signupPassword">Password</label>
+                            <input 
+                                id="signupPassword"
+                                type="password" 
+                                value={signupPassword} 
+                                onchange={handleSignupPasswordChange}
+                                placeholder="Min 6 characters"
+                                required>
+                        </div>
+                        <div class="form-group">
+                            <label for="confirmPassword">Confirm Password</label>
+                            <input 
+                                id="confirmPassword"
+                                type="password" 
+                                value={confirmPassword} 
+                                onchange={handleConfirmPasswordChange}
+                                placeholder="Confirm password"
+                                required>
+                        </div>
+                    </div>
+
+                    <template if:true={signupError}>
+                        <div class="error-message">
+                            {signupErrorMessage}
+                        </div>
+                    </template>
+
+                    <template if:true={signupSuccess}>
+                        <div class="success-message">
+                            {signupSuccessMessage}
+                        </div>
+                    </template>
+
+                    <button type="submit" class="login-button" disabled={isLoading}>
+                        <template if:true={isLoading}>
+                            <span class="spinner"></span> Creating Account...
+                        </template>
+                        <template if:false={isLoading}>
+                            Create Account
+                        </template>
+                    </button>
+                </form>
+
+                <div class="toggle-mode">
+                    <p>Already have an account? 
+                        <a href="javascript:void(0);" onclick={toggleMode}>Login here</a>
+                    </p>
+                </div>
+            </template>
+
+            <!-- Footer -->
+            <div class="login-footer">
+                <p>For assistance, contact HR</p>
+            </div>
+        </div>
+    </div>
+</template>

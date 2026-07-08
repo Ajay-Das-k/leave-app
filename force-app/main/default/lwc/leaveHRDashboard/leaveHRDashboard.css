@@ -1,0 +1,371 @@
+:host {
+    display: block;
+    background-color: #f8f9fa;
+    padding: 0; /* Full width for banner */
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+
+/* --- Header / Welcome Section --- */
+.header-hero {
+    background: linear-gradient(135deg, #d32f2f 0%, #b71c1c 100%);
+    color: white;
+    padding: 2rem 3rem; /* Increased side padding for better alignment */
+    border-radius: 0 0 16px 16px; /* Rounded only at bottom */
+    box-shadow: 0 4px 15px rgba(211, 47, 47, 0.15);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+lightning-tabset {
+    padding: 0 2rem;
+    display: block;
+}
+
+.header-content h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin: 0;
+    line-height: 1.2;
+}
+
+.header-sub {
+    opacity: 0.9;
+    font-size: 0.95rem;
+    margin-top: 0.5rem;
+}
+
+.profile-btn {
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    color: white;
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.profile-btn:hover {
+    background: white;
+    color: #d32f2f;
+}
+
+/* --- Stats Grid (Cool Cards) --- */
+.kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+}
+
+.kpi-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 16px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05); /* Softer shadow */
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border: 1px solid #f0f0f0;
+    position: relative;
+    overflow: hidden;
+}
+
+.kpi-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+.kpi-title {
+    color: #64748b;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.5rem;
+}
+
+.kpi-value {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #1e293b;
+    line-height: 1;
+}
+
+/* Accent lines for cards */
+.kpi-card.accent-red .kpi-value { color: #d32f2f; }
+.kpi-card.accent-orange .kpi-value { color: #f97316; }
+.kpi-card.accent-blue .kpi-value { color: #3b82f6; } /* Cool blue */
+.kpi-card.accent-purple .kpi-value { color: #d32f2f; } /* Red for Rejected */
+
+/* Clickable cards */
+.clickable-card {
+    cursor: pointer;
+}
+
+.clickable-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+}
+
+/* --- Section Containers --- */
+.section-container {
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.04);
+    border: 1px solid #f1f5f9;
+    overflow: hidden;
+    margin-bottom: 2rem;
+}
+
+.section-header {
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid #f1f5f9;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #ffffff;
+}
+
+.section-title {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #334155;
+    margin: 0;
+}
+
+/* --- Approval List Styling --- */
+.approval-item {
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid #f1f5f9;
+    transition: background 0.1s;
+}
+
+.approval-item:hover {
+    background: #fafafa;
+}
+
+.approval-item:last-child {
+    border-bottom: none;
+}
+
+.emp-name {
+    font-weight: 700;
+    color: #1e293b;
+    font-size: 1rem;
+}
+
+.leave-info {
+    color: #64748b;
+    font-size: 0.9rem;
+    margin-top: 2px;
+}
+
+.leave-date-badge {
+    background: #f1f5f9;
+    color: #475569;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    display: inline-block;
+    margin-top: 4px;
+}
+
+/* --- Tables --- */
+.simple-table {
+    width: 100%;
+    margin: 0;
+}
+
+/* Overrides for cleaner datatable look */
+:host {
+    --slds-c-datatable-header-color-background: #f8fafc;
+    --slds-c-datatable-cell-padding-top: 12px;
+    --slds-c-datatable-cell-padding-bottom: 12px;
+}
+
+/* --- Empty States --- */
+.empty-state {
+    text-align: center;
+    padding: 3rem;
+    color: #94a3b8;
+}
+
+/* --- ENHANCED MODAL STYLING --- */
+.modal-enhanced {
+    max-width: 90%;
+    width: 1200px;
+}
+
+/* Red gradient to match brand theme per user request */
+.modal-header-enhanced {
+    background: linear-gradient(135deg, #d32323 0%, #a01a1a 100%);
+    color: white;
+    padding: 1.5rem 2rem;
+    border-radius: 12px 12px 0 0;
+    position: relative;
+}
+
+.modal-close-btn {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.modal-close-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.1);
+}
+
+.modal-header-content {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.header-icon {
+    --slds-c-icon-color-background: rgba(255, 255, 255, 0.25);
+    --slds-c-icon-color-foreground: white;
+    padding: 0.5rem;
+    border-radius: 8px;
+}
+
+.modal-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0;
+    line-height: 1.2;
+}
+
+.modal-subtitle {
+    font-size: 0.9rem;
+    opacity: 0.9;
+    margin: 0.25rem 0 0 0;
+}
+
+/* Stats Banner */
+.stats-banner {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    background: rgba(255, 255, 255, 0.15);
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    backdrop-filter: blur(10px);
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.stat-item lightning-icon {
+    --slds-c-icon-color-foreground: white;
+}
+
+.stat-value {
+    font-size: 1.75rem;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.stat-label {
+    font-size: 0.85rem;
+    opacity: 0.9;
+    font-weight: 500;
+}
+
+.stat-divider {
+    width: 1px;
+    height: 30px;
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* Enhanced Content */
+.modal-content-enhanced {
+    padding: 0 !important;
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+.table-wrapper-enhanced {
+    padding: 1.5rem;
+}
+
+/* Enhanced Table Styles */
+.enhanced-table {
+    --slds-c-datatable-header-color-background: #f8fafc;
+    --slds-c-datatable-row-color-background-hover: #f1f5f9;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* Enhanced Empty State */
+.empty-state-enhanced {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: #64748b;
+}
+
+.empty-state-enhanced lightning-icon {
+    --slds-c-icon-color-foreground: #cbd5e1;
+    margin-bottom: 1.5rem;
+}
+
+.empty-state-enhanced h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #334155;
+    margin: 0 0 0.5rem 0;
+}
+
+.empty-state-enhanced p {
+    font-size: 0.95rem;
+    margin: 0;
+}
+
+/* Animation */
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modal-enhanced {
+    animation: slideDown 0.3s ease-out;
+}
+
+/* Cancelled Modal - Red Gradient Theme */
+.modal-header-cancelled {
+    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+}
+
+/* Rejected Modal - Red Gradient Theme */
+.modal-header-rejected {
+    background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
+}
+
+/* FIX: Ensure Dropdowns appear above other elements */
+.slds-dropdown {
+    z-index: 9000 !important;
+}

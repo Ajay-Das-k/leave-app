@@ -1,8 +1,9 @@
 public without sharing class LeaveController {
     
     @AuraEnabled(cacheable=true)
-    public static List<Leave_Request__c> getPendingLeaves() {
-        return [SELECT Id, Name, Employee__c, Employee__r.Name, Status__c, Leave_Type__c, Leave_Type__r.Name, Reason__c, Submitted_Date__c, From_Date__c, To_Date__c
+    public static List<Leave_Request__c> getPendingLeaves(String callerId) {
+        SecurityMiddleware.verifyAdminOrHROrManager(callerId);
+        return [SELECT Id, Name, Employee__c, Employee__r.Name, Employee__r.Profile_Picture_URL__c, Status__c, Leave_Type__c, Leave_Type__r.Name, Reason__c, Submitted_Date__c, From_Date__c, To_Date__c
                 FROM Leave_Request__c 
                 WHERE Status__c IN ('Submitted', 'Cancellation Requested') 
                 ORDER BY Submitted_Date__c DESC LIMIT 50];
@@ -10,15 +11,16 @@ public without sharing class LeaveController {
     
     @AuraEnabled(cacheable=true)
     public static List<Leave_Request__c> getHRColleagueLeaves(String hrId) {
+        SecurityMiddleware.verifyHR(hrId);
         // If hrId is provided, exclude their own leaves to prevent self-approval
         if (String.isNotBlank(hrId)) {
-            return [SELECT Id, Name, Employee__c, Employee__r.Name, Status__c, Leave_Type__c, Leave_Type__r.Name, Reason__c, Submitted_Date__c, From_Date__c, To_Date__c, Number_of_Days__c
+            return [SELECT Id, Name, Employee__c, Employee__r.Name, Employee__r.Profile_Picture_URL__c, Status__c, Leave_Type__c, Leave_Type__r.Name, Reason__c, Submitted_Date__c, From_Date__c, To_Date__c, Number_of_Days__c
                     FROM Leave_Request__c 
                     WHERE Status__c IN ('Submitted', 'Pending HR Approval', 'Cancellation Requested') 
                     AND Employee__c != :hrId
                     ORDER BY Submitted_Date__c DESC LIMIT 50];
         } else {
-            return [SELECT Id, Name, Employee__c, Employee__r.Name, Status__c, Leave_Type__c, Leave_Type__r.Name, Reason__c, Submitted_Date__c, From_Date__c, To_Date__c, Number_of_Days__c
+            return [SELECT Id, Name, Employee__c, Employee__r.Name, Employee__r.Profile_Picture_URL__c, Status__c, Leave_Type__c, Leave_Type__r.Name, Reason__c, Submitted_Date__c, From_Date__c, To_Date__c, Number_of_Days__c
                     FROM Leave_Request__c 
                     WHERE Status__c IN ('Submitted', 'Pending HR Approval', 'Cancellation Requested') 
                     ORDER BY Submitted_Date__c DESC LIMIT 50];
@@ -26,13 +28,15 @@ public without sharing class LeaveController {
     }
 
     @AuraEnabled
-    public static void approveLeaveRequest(Id leaveId, String comment) {
+    public static void approveLeaveRequest(Id leaveId, String comment, String managerId) {
+        SecurityMiddleware.verifyManager(managerId);
         finalizeApproval(leaveId, comment);
     }
 
 
     @AuraEnabled(cacheable=true)
-    public static Map<String, Integer> getManagerStats() {
+    public static Map<String, Integer> getManagerStats(String managerId) {
+        SecurityMiddleware.verifyManager(managerId);
         Map<String, Integer> stats = new Map<String, Integer>();
         
         // 1. Pending Approvals
@@ -66,12 +70,14 @@ public without sharing class LeaveController {
     }
     
     @AuraEnabled
-    public static void approveLeaveByHR(Id leaveId, String comment) {
+    public static void approveLeaveByHR(Id leaveId, String comment, String hrId) {
+        SecurityMiddleware.verifyHR(hrId);
         finalizeApproval(leaveId, comment);
     }
 
     @AuraEnabled
-    public static void rejectLeaveRequest(Id leaveId, String comment) {
+    public static void rejectLeaveRequest(Id leaveId, String comment, String callerId) {
+        SecurityMiddleware.verifyAdminOrHROrManager(callerId);
         try {
             Leave_Request__c leaveReq = [SELECT Id FROM Leave_Request__c WHERE Id = :leaveId LIMIT 1];
             leaveReq.Status__c = 'HR_Rejected';
@@ -530,7 +536,8 @@ public without sharing class LeaveController {
         }
     }
     @AuraEnabled(cacheable=true)
-    public static List<Map<String, String>> getTeamStatus() {
+    public static List<Map<String, String>> getTeamStatus(String callerId) {
+        SecurityMiddleware.verifyAdminOrHROrManager(callerId);
         List<Map<String, String>> teamStatus = new List<Map<String, String>>();
         Date today = Date.today();
         
@@ -580,7 +587,8 @@ public without sharing class LeaveController {
         return teamStatus;
     }
     @AuraEnabled(cacheable=true)
-    public static Map<String, Integer> getHRStats() {
+    public static Map<String, Integer> getHRStats(String callerId) {
+        SecurityMiddleware.verifyHR(callerId);
         Map<String, Integer> stats = new Map<String, Integer>();
         
         // 1. Total Requests (All time)
@@ -686,7 +694,8 @@ public without sharing class LeaveController {
 
 
     @AuraEnabled(cacheable=true)
-    public static List<Map<String, Object>> getTeamAnalytics() {
+    public static List<Map<String, Object>> getTeamAnalytics(String callerId) {
+        SecurityMiddleware.verifyAdminOrHR(callerId);
         List<Map<String, Object>> analytics = new List<Map<String, Object>>();
         
         // 1. Get All Employees (Filtered: CT%, Not Manager, Not Harish Kumar)
@@ -785,7 +794,8 @@ public without sharing class LeaveController {
     }
 
     @AuraEnabled(cacheable=true)
-    public static List<Leave_Request__c> getLeavesByDateRange(Date startDate, Date endDate) {
+    public static List<Leave_Request__c> getLeavesByDateRange(Date startDate, Date endDate, String callerId) {
+        SecurityMiddleware.verifyAdminOrHR(callerId);
         if (startDate == null || endDate == null) {
             return new List<Leave_Request__c>();
         }
@@ -799,7 +809,8 @@ public without sharing class LeaveController {
     }
 
     @AuraEnabled(cacheable=true)
-    public static List<Leave_Request__c> getLeavesByDateRangeAndStatus(Date startDate, Date endDate, List<String> statuses) {
+    public static List<Leave_Request__c> getLeavesByDateRangeAndStatus(Date startDate, Date endDate, List<String> statuses, String callerId) {
+        SecurityMiddleware.verifyAdminOrHR(callerId);
         if (startDate == null || endDate == null) {
             return new List<Leave_Request__c>();
         }
@@ -815,7 +826,8 @@ public without sharing class LeaveController {
     // --- HR MARK LEAVE FEATURE ---
 
     @AuraEnabled(cacheable=true)
-    public static List<Map<String, String>> getEmployees() {
+    public static List<Map<String, String>> getEmployees(String callerId) {
+        SecurityMiddleware.verifyAdminOrHR(callerId);
         List<Map<String, String>> options = new List<Map<String, String>>();
         for (Contact c : [SELECT Id, Name, Employee_ID__c FROM Contact WHERE Employee_ID__c != NULL ORDER BY Name]) {
             Map<String, String> option = new Map<String, String>();
@@ -827,7 +839,8 @@ public without sharing class LeaveController {
     }
 
     @AuraEnabled
-    public static void createLeaveByHR(Id employeeId, Date fromDate, Date toDate, String leaveType, String reason, String leaveTypeId, Boolean isHalfDay, String markedByName) {
+    public static void createLeaveByHR(Id employeeId, Date fromDate, Date toDate, String leaveType, String reason, String leaveTypeId, Boolean isHalfDay, String markedByName, String halfDaySession, String callerId) {
+        SecurityMiddleware.verifyAdminOrHR(callerId);
         try {
             // 1. Check for Holiday Overlap
             List<Holiday> overlappingHolidays = [SELECT Name, ActivityDate FROM Holiday 
@@ -862,7 +875,12 @@ public without sharing class LeaveController {
             // Append Half Day to reason for logic detection
             String finalReason = reason;
             if (isHalfDay != null && isHalfDay) {
-                finalReason = (String.isNotBlank(finalReason) ? finalReason : 'Half Day Leave') + ' (Half Day)';
+                String suffix = ' (Half Day';
+                if (String.isNotBlank(halfDaySession)) {
+                    suffix += ' - ' + halfDaySession;
+                }
+                suffix += ')';
+                finalReason = (String.isNotBlank(finalReason) ? finalReason : 'Half Day Leave') + suffix;
             }
             leave.Reason__c = finalReason;
             
@@ -877,7 +895,7 @@ public without sharing class LeaveController {
             
             // Now Trigger Approval (which handles balance deduction)
             String approverInfo = 'Auto-Approved by ' + (String.isBlank(markedByName) ? 'HR Entry' : markedByName);
-            approveLeaveByHR(leave.Id, approverInfo);
+            approveLeaveByHR(leave.Id, approverInfo, callerId);
             
             System.debug('HR Created & Approved Leave: ' + leave.Id + ' for Employee: ' + employeeId);
 

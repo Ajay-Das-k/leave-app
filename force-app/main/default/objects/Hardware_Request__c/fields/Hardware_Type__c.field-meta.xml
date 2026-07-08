@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Hardware_Type__c</fullName>
+    <label>Hardware Type</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Laptop</fullName>
+                <default>false</default>
+                <label>Laptop</label>
+            </value>
+            <value>
+                <fullName>Monitor</fullName>
+                <default>false</default>
+                <label>Monitor</label>
+            </value>
+            <value>
+                <fullName>Mobile</fullName>
+                <default>false</default>
+                <label>Mobile</label>
+            </value>
+            <value>
+                <fullName>Keyboard</fullName>
+                <default>false</default>
+                <label>Keyboard</label>
+            </value>
+            <value>
+                <fullName>Mouse</fullName>
+                <default>false</default>
+                <label>Mouse</label>
+            </value>
+            <value>
+                <fullName>Cables</fullName>
+                <default>false</default>
+                <label>Cables</label>
+            </value>
+            <value>
+                <fullName>Headphones</fullName>
+                <default>false</default>
+                <label>Headphones</label>
+            </value>
+            <value>
+                <fullName>Keyboard Mouse Combo</fullName>
+                <default>false</default>
+                <label>Keyboard Mouse Combo</label>
+            </value>
+            <value>
+                <fullName>Hub</fullName>
+                <default>false</default>
+                <label>Hub</label>
+            </value>
+            <value>
+                <fullName>Modem</fullName>
+                <default>false</default>
+                <label>Modem</label>
+            </value>
+            <value>
+                <fullName>Network Hardware</fullName>
+                <default>false</default>
+                <label>Network Hardware</label>
+            </value>
+            <value>
+                <fullName>CPU</fullName>
+                <default>false</default>
+                <label>CPU</label>
+            </value>
+            <value>
+                <fullName>Servers</fullName>
+                <default>false</default>
+                <label>Servers</label>
+            </value>
+            <value>
+                <fullName>Accessory</fullName>
+                <default>false</default>
+                <label>Accessory</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

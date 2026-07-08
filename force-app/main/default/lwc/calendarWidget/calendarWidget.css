@@ -1,0 +1,88 @@
+:host {
+    display: block;
+}
+
+/* --- CALENDAR WIDGET STYLES (Copied from Employee Dashboard) --- */
+.calendar-container {
+    background: white;
+    border-radius: 0.25rem;
+    overflow: hidden;
+    border: 1px solid #dddbda;
+}
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem;
+    background: #f3f2f2;
+    border-bottom: 1px solid #dddbda;
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px; /* Tighter gap */
+}
+
+.calendar-day-header {
+    font-weight: bold;
+    padding: 2px;
+    margin-bottom: 2px;
+    color: #706e6b;
+    font-size: 0.75rem; /* Smaller */
+    text-align: center;
+}
+
+.calendar-day {
+    padding: 4px; /* Reduced padding */
+    border: 1px solid transparent;
+    font-size: 0.8125rem; /* Smaller */
+    position: relative;
+    cursor: default;
+    border-radius: 4px;
+    text-align: center;
+}
+
+.calendar-day:hover {
+    background-color: #f3f3f3;
+}
+
+.calendar-day.empty {
+    background-color: transparent;
+    cursor: default;
+}
+
+.calendar-day.empty:hover {
+    background-color: transparent;
+}
+
+/* Holiday Style on Calendar */
+.calendar-day.holiday {
+    background-color: #fff0f0; 
+    color: #ba0517;
+    font-weight: bold;
+}
+
+/* Leave Style on Calendar */
+.calendar-day.leave-taken {
+    background-color: #eef4ff; 
+    color: #0176d3;
+    font-weight: bold;
+}
+
+/* Work From Home Style on Calendar */
+.calendar-day.wfh-leave {
+    background-color: #fff7e6; 
+    color: #cc8800;
+    font-weight: bold;
+}
+
+/* Combined (if both occur) */
+.calendar-day.holiday.leave-taken {
+    background: linear-gradient(135deg, #fff0f0 50%, #eef4ff 50%);
+}
+
+.calendar-day.holiday.wfh-leave {
+    background: linear-gradient(135deg, #fff0f0 50%, #fff7e6 50%);
+}

@@ -1,0 +1,58 @@
+<template>
+    <div class="paybook-container">
+        <!-- Check if user is logged in -->
+        <template if:false={isLoggedIn}>
+            <c-paybook-login onlogin={handleLogin}></c-paybook-login>
+        </template>
+
+        <!-- Show dashboard based on role -->
+        <template if:true={isLoggedIn}>
+            <!-- Header with Logout -->
+            <div class="app-header">
+                <div class="header-content">
+                    <h1>Leave App</h1>
+                    <div class="user-info">
+                        <span>{currentUser.employeeName}</span>
+                        <span class="role-badge">{currentUser.userRole}</span>
+                        <template if:true={currentUser.isTechnicalSystemAdmin}>
+                            <span class="role-badge" style="background-color: #5c2d91; margin-left: 8px;">SYSTEM ADMIN</span>
+                        </template>
+                        <button onclick={handleLogout} class="logout-btn">Logout</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main App Content -->
+            <div class="main-app-content slds-p-horizontal_medium slds-p-bottom_medium">
+                <!-- Employee Dashboard -->
+                <template if:true={isEmployee}>
+                    <c-leave-employee-dashboard current-user={currentUser}></c-leave-employee-dashboard>
+                </template>
+
+                <!-- Manager Dashboard -->
+                <template if:true={isManager}>
+                    <c-leave-manager-dashboard current-user={currentUser}></c-leave-manager-dashboard>
+                </template>
+
+                <!-- HR Dashboard -->
+                <template if:true={isHR}>
+                    <c-leave-h-r-dashboard current-user={currentUser}></c-leave-h-r-dashboard>
+                </template>
+            </div>
+
+            <!-- Unauthorized Access -->
+            <template if:true={showUnauthorized}>
+                <div class="unauthorized-message">
+                    <div class="error-box">
+                        <h2>Access Denied</h2>
+                        <p>You don't have permission to access this page</p>
+                        <button onclick={handleLogout}>Go Back to Login</button>
+                    </div>
+                </div>
+            </template>
+        </template>
+        <footer class="slds-p-around_medium slds-text-align_center slds-text-body_small slds-text-color_weak slds-border_top slds-m-top_large">
+            CRMantra, Inc., Confidential and Proprietary. Copyright © 2026.
+        </footer>
+    </div>
+</template>

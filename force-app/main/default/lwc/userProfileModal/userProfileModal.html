@@ -1,0 +1,182 @@
+<template>
+    <template if:true={isOpen}>
+        <section role="dialog" tabindex="-1" aria-modal="true" aria-labelledby="modal-heading-01" class="slds-modal slds-fade-in-open slds-modal_medium">
+            <div class="slds-modal__container">
+                <!-- Header -->
+                <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closeModal}>
+                    <lightning-icon icon-name="utility:close" alternative-text="close" variant="inverse" size="small"></lightning-icon>
+                    <span class="slds-assistive-text">Close</span>
+                </button>
+                <div class="slds-modal__header profile-header">
+                    <div style="margin-bottom: 1rem;">
+                        <template if:true={profileData.profilePictureUrl}>
+                            <img src={profileData.profilePictureUrl} style="width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid #ddd;" alt="Profile Picture"/>
+                        </template>
+                        <template if:false={profileData.profilePictureUrl}>
+                            <lightning-icon icon-name="standard:user" size="large" class="header-icon slds-m-bottom_small"></lightning-icon>
+                        </template>
+                        
+                        <div class="slds-m-top_small">
+                            <label class="slds-button slds-button_neutral" style="cursor: pointer;">
+                                Update Photo
+                                <input type="file" accept="image/*" style="display:none;" onchange={handleFileChange} />
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <h2 id="modal-heading-01" class="slds-modal__title slds-hyphenate">My Profile</h2>
+                    <p class="slds-m-top_x-small slds-text-color_weak">Manage your personal information and account settings</p>
+                </div>
+
+                <!-- Body -->
+                <div class="slds-modal__content slds-p-around_large profile-content" id="modal-content-id-1">
+                    
+                    <template if:true={isLoading}>
+                        <lightning-spinner alternative-text="Loading" size="medium"></lightning-spinner>
+                    </template>
+
+                    <!-- Cropper View -->
+                    <template if:true={isCropping}>
+                        <div class="cropper-container slds-text-align_center slds-p-around_medium">
+                            <h3 class="slds-text-heading_small slds-m-bottom_medium">Adjust Profile Picture</h3>
+                            
+                            <div style="position:relative; width: 300px; height: 300px; margin: 0 auto; overflow: hidden; background: #eee; border: 1px solid #ddd;">
+                                <canvas data-id="cropCanvas" width="300" height="300" 
+                                        onmousedown={handleMouseDown} 
+                                        onmousemove={handleMouseMove} 
+                                        onmouseup={handleMouseUp} 
+                                        onmouseleave={handleMouseUp}
+                                        ontouchstart={handleTouchStart}
+                                        ontouchmove={handleTouchMove}
+                                        ontouchend={handleTouchEnd}
+                                        style="cursor: move; touch-action: none; position: absolute; top:0; left:0;"></canvas>
+                                <!-- Circular mask -->
+                                <div style="position:absolute; top:0; left:0; width:300px; height:300px; pointer-events:none; box-shadow: 0 0 0 9999px rgba(0,0,0,0.5); border-radius:50%;"></div>
+                            </div>
+                            
+                            <div class="slds-m-top_large slds-p-horizontal_large">
+                                <lightning-slider label="Zoom" min="0.5" max="3" step="0.1" value={zoomScale} onchange={handleZoomChange}></lightning-slider>
+                            </div>
+                            
+                            <div class="slds-m-top_medium">
+                                <button class="slds-button slds-button_neutral" onclick={cancelCrop}>Cancel</button>
+                                <button class="slds-button slds-button_brand" onclick={handleCropAndUpload}>Apply & Upload</button>
+                            </div>
+                        </div>
+                    </template>
+
+                    <!-- Profile View -->
+                    <template if:false={isCropping}>
+                    <!-- Personal Information Section -->
+                    <div class="profile-section">
+                        <div class="section-header">
+                            <lightning-icon icon-name="utility:user" size="small" class="slds-m-right_small"></lightning-icon>
+                            <h3>Personal Information</h3>
+                        </div>
+                        <div class="section-body grid-layout">
+                            <div class="field-item">
+                                <label>First Name</label>
+                                <div class="read-only-value">{profileData.firstName}</div>
+                            </div>
+                            <div class="field-item">
+                                <label>Last Name</label>
+                                <div class="read-only-value">{profileData.lastName}</div>
+                            </div>
+                            <div class="field-item">
+                                <label>Employee ID</label>
+                                <div class="read-only-value">{profileData.employeeId}</div>
+                            </div>
+                            <div class="field-item">
+                                <label>Gender</label>
+                                <div class="read-only-value">{profileData.gender}</div>
+                            </div>
+                            <div class="field-item">
+                                <label>Birthdate</label>
+                                <div class="read-only-value">{profileData.birthdate}</div>
+                            </div>
+                            <div class="field-item editable">
+                                <lightning-combobox label="Blood Group" value={profileData.bloodGroup} data-field="bloodGroup" onchange={handleInputChange} options={bloodGroupOptions} variant="label-stacked"></lightning-combobox>
+                            </div>
+                            <!-- Editable -->
+                            <div class="field-item editable">
+                                <lightning-input type="tel" label="Mobile" value={profileData.mobile} data-field="mobile" onchange={handleInputChange} variant="label-stacked"></lightning-input>
+                            </div>
+                            <div class="field-item full-width editable">
+                                <lightning-input type="email" label="Email" value={profileData.email} data-field="email" onchange={handleInputChange} variant="label-stacked"></lightning-input>
+                            </div>
+                            <div class="field-item full-width editable">
+                                <lightning-textarea label="Address" value={profileData.address} data-field="address" onchange={handleInputChange} variant="label-stacked"></lightning-textarea>
+                            </div>
+                            <div class="field-item editable">
+                                <lightning-input type="text" label="Guardian Name" value={profileData.guardianName} data-field="guardianName" onchange={handleInputChange} variant="label-stacked"></lightning-input>
+                            </div>
+                            <div class="field-item editable">
+                                <lightning-input type="tel" label="Guardian Phone" value={profileData.guardianPhone} data-field="guardianPhone" onchange={handleInputChange} variant="label-stacked"></lightning-input>
+                            </div>
+                            <div class="field-item editable">
+                                <lightning-combobox label="Guardian Relation" value={profileData.guardianRelation} data-field="guardianRelation" onchange={handleInputChange} options={guardianRelationOptions} variant="label-stacked"></lightning-combobox>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Employment Details Section -->
+                    <div class="profile-section">
+                        <div class="section-header">
+                            <lightning-icon icon-name="utility:company" size="small" class="slds-m-right_small"></lightning-icon>
+                            <h3>Employment Details</h3>
+                        </div>
+                        <div class="section-body grid-layout">
+                            <div class="field-item">
+                                <label>Department</label>
+                                <div class="read-only-value">{profileData.department}</div>
+                            </div>
+                            <div class="field-item">
+                                <label>Employee Type</label>
+                                <div class="read-only-value">{profileData.employeeType}</div>
+                            </div>
+                            <div class="field-item">
+                                <label>Joining Date</label>
+                                <div class="read-only-value">{profileData.joiningDate}</div>
+                            </div>
+                            <div class="field-item">
+                                <label>Experience</label>
+                                <div class="read-only-value">{profileData.yearsOfExperience}</div>
+                            </div>
+                            <div class="field-item">
+                                <label>Reports To</label>
+                                <div class="read-only-value">{profileData.reportsTo}</div>
+                            </div>
+                             <div class="field-item">
+                                <label>Probation</label>
+                                <div class="read-only-value">{profileData.isProbation}</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Security Settings Section -->
+                    <div class="profile-section">
+                        <div class="section-header invalid">
+                            <lightning-icon icon-name="utility:lock" size="small" class="slds-m-right_small" variant="error"></lightning-icon>
+                            <h3>Security Settings</h3>
+                        </div>
+                        <div class="section-body">
+                             <div class="field-item full-width editable">
+                                <lightning-input type="password" label="New Password" placeholder="Leave blank to keep current password" value={profileData.password} data-field="password" onchange={handleInputChange} variant="label-stacked"></lightning-input>
+                            </div>
+                        </div>
+                    </div>
+                    </template>
+                </div>
+
+                <!-- Footer -->
+                <template if:false={isCropping}>
+                    <div class="slds-modal__footer">
+                        <button class="slds-button slds-button_neutral" onclick={closeModal}>Cancel</button>
+                        <button class="slds-button slds-button_brand" onclick={handleSave}>Save Changes</button>
+                    </div>
+                </template>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+</template>

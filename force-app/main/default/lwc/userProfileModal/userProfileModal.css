@@ -1,0 +1,96 @@
+/* Modal Customization */
+.profile-header {
+    background: #f8f9fa;
+    border-bottom: 1px solid #e0e0e0;
+    text-align: center;
+    padding: 20px;
+}
+
+.profile-header h2 {
+    font-size: 24px;
+    font-weight: 600;
+    color: #1a1f71; /* Deep Brand Blue */
+}
+
+.profile-content {
+    background: #ffffff;
+}
+
+/* Sections */
+.profile-section {
+    margin-bottom: 30px;
+    background: #fff;
+    border: 1px solid #f0f0f0;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+}
+
+.section-header {
+    background: #f4f6f9;
+    padding: 12px 20px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #eee;
+}
+
+.section-header h3 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.section-body {
+    padding: 20px;
+}
+
+/* Grid Layout */
+.grid-layout {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.field-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.field-item.full-width {
+    grid-column: span 2;
+}
+
+.field-item label {
+    font-size: 12px;
+    color: #555;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+.read-only-value {
+    font-size: 15px;
+    color: #111;
+    font-weight: 400;
+    padding: 8px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+/* Editable Fields */
+.editable lightning-input {
+    --slds-c-input-spacing-vertical-start: 0;
+}
+
+/* Mobile Responsive */
+@media (max-width: 600px) {
+    .grid-layout {
+        grid-template-columns: 1fr;
+    }
+    
+    .field-item.full-width {
+        grid-column: span 1;
+    }
+}

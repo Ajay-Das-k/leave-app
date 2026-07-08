@@ -1,0 +1,28 @@
+<template>
+    <div class="calendar-container slds-box slds-box_x-small slds-theme_default slds-m-bottom_medium">
+        <div class="calendar-header">
+            <lightning-button-icon icon-name="utility:chevronleft" variant="bare" onclick={previousMonth} alternative-text="Previous Month"></lightning-button-icon>
+            <span class="slds-text-heading_small">{currentMonthName}</span>
+            <lightning-button-icon icon-name="utility:chevronright" variant="bare" onclick={nextMonth} alternative-text="Next Month"></lightning-button-icon>
+        </div>
+        <div class="calendar-grid">
+            <div class="calendar-day-header">Sun</div>
+            <div class="calendar-day-header">Mon</div>
+            <div class="calendar-day-header">Tue</div>
+            <div class="calendar-day-header">Wed</div>
+            <div class="calendar-day-header">Thu</div>
+            <div class="calendar-day-header">Fri</div>
+            <div class="calendar-day-header">Sat</div>
+            
+            <template for:each={calendarDays} for:item="day">
+                <div key={day.key} class={day.class} title={day.title}>
+                    {day.day}
+                </div>
+            </template>
+        </div>
+        <div class="slds-m-top_x-small slds-text-body_small slds-text-align_center">
+            <span class="slds-badge slds-theme_error" style="background:#fff0f0; color:#ba0517;">Holiday</span>
+            <span class="slds-badge slds-theme_info" style="background:#eef4ff; color:#0176d3;">Leave</span>
+        </div>
+    </div>
+</template>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Life_Span_Consumed_Percentage__c</fullName>
+    <description>Calculates the percentage of the expected life span that has been consumed.</description>
+    <externalId>false</externalId>
+    <formula>IF(Expected_Life_Span_Years__c &gt; 0, ((YEAR(TODAY()) - Year_of_Manufacture__c) / Expected_Life_Span_Years__c), 0)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Life Span Consumed Percentage</label>
+    <precision>18</precision>
+    <required>false</required>
+    <scale>2</scale>
+    <trackTrending>false</trackTrending>
+    <type>Percent</type>
+</CustomField>

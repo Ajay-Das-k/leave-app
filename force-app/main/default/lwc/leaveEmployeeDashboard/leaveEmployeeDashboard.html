@@ -1,0 +1,497 @@
+<template>
+    <div class="dashboard-wrapper">
+        <!-- Profile Header -->
+        <div class="welcome-section profile-card" style="display:flex; justify-content:space-between; align-items:center;">
+            <div class="profile-info" style="display:flex; align-items:center; gap:15px;">
+                <template if:true={profileData.profilePictureUrl}>
+                    <img src={profileData.profilePictureUrl} style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.1);" alt="Profile" />
+                </template>
+                <div>
+                    <h2>Welcome, <strong>{userName}!</strong></h2>
+                    <p>Your Leave Dashboard | {currentUser.employeeId} | {currentUser.department}</p>
+                    <div class="profile-completion slds-m-top_small" style="max-width: 300px;">
+                        <span class="slds-text-body_small">Profile Completion: {profileCompletion}%</span>
+                        <lightning-progress-bar value={profileCompletion} size="small" variant="circular"></lightning-progress-bar>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <template if:false={isProfileComplete}>
+                    <button class="view-profile-btn slds-m-right_small" onclick={openProfile} style="background-color:#ff9800;">Complete Profile</button>
+                </template>
+                <button class="view-profile-btn" onclick={openProfile}>My Profile</button>
+            </div>
+        </div>
+
+
+
+        <!-- KPI Cards Row -->
+        <lightning-tabset>
+            <lightning-tab label="Home" icon-name="standard:home">
+                <div class="kpi-grid">
+            <!-- Casual Leave Balance Card -->
+            <div class="kpi-card">
+                <div class="card-header"><lightning-icon icon-name="custom:custom38" size="small" class="slds-m-right_x-small"></lightning-icon> CASUAL Leave</div>
+                <div class="card-stats">
+                    <div class="stat-row">
+                        <span class="stat-label">Leaves Taken:</span>
+                        <span class="stat-value">{casualLeaveUsed}</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Leaves Balance:</span>
+                        <span class="stat-value">{casualLeaveBal}</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sick Leave Balance Card -->
+            <div class="kpi-card">
+                <div class="card-header"><lightning-icon icon-name="custom:custom86" size="small" class="slds-m-right_x-small"></lightning-icon> SICK Leave</div>
+                 <div class="card-stats">
+                    <div class="stat-row">
+                        <span class="stat-label">Leaves Taken:</span>
+                        <span class="stat-value">{sickLeaveUsed}</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Leaves Balance:</span>
+                        <span class="stat-value">{sickLeaveBal}</span>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <!-- Pending Requests Card -->
+            <div class="kpi-card">
+                <div class="card-header"><lightning-icon icon-name="custom:custom13" size="small" class="slds-m-right_x-small"></lightning-icon> Pending Requests</div>
+                <div class="card-value error">{pendingCount}</div>
+                <div class="card-label">Awaiting Approval</div>
+            </div>
+
+            <!-- Loss of Pay Card -->
+            <div class="kpi-card">
+                <div class="card-header"><lightning-icon icon-name="custom:custom15" size="small" class="slds-m-right_x-small"></lightning-icon> Loss of Pay</div>
+                <div class="card-value error">{lopCount}</div>
+                <div class="card-label">Days Deducted</div>
+            </div>
+        </div>
+
+        <!-- Split Screen: Left (Calendar + Holidays) & Right (Submit Request) -->
+        <div class="section slds-m-top_large">
+            <div class="slds-grid slds-gutters slds-wrap">
+                
+                <!-- LEFT COLUMN: Calendar & Holiday List -->
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_3-of-12 left-col-flex">
+                    <!-- Calendar Widget -->
+                    <c-calendar-widget holidays={upcomingHolidays} leaves={myLeaves}></c-calendar-widget>
+
+                    <!-- Holiday List (Sidebar) -->
+                    <div class="slds-box slds-box_x-small slds-theme_default holiday-list-container">
+                        <template if:true={displayHolidays.length}>
+                            <ul class="holiday-list">
+                                <template for:each={displayHolidays} for:item="holiday">
+                                    <li key={holiday.Id} class="holiday-item">
+                                        <div class="holiday-date-badge">
+                                            <lightning-formatted-date-time value={holiday.ActivityDate} day="2-digit" class="day"></lightning-formatted-date-time>
+                                            <lightning-formatted-date-time value={holiday.ActivityDate} month="short" class="month"></lightning-formatted-date-time>
+                                        </div>
+                                        <div class="holiday-details">
+                                            <div class="holiday-name">
+                                                {holiday.Name}
+                                                <template if:true={holiday.isOptional}>
+                                                    <span class="slds-badge slds-m-left_x-small slds-theme_warning" style="font-size:10px; padding:2px 6px;">Optional</span>
+                                                </template>
+                                            </div>
+                                            <div class="holiday-day">
+                                                <lightning-formatted-date-time value={holiday.ActivityDate} weekday="long" year="numeric"></lightning-formatted-date-time>
+                                            </div>
+                                        </div>
+                                    </li>
+                                </template>
+                            </ul>
+                        </template>
+                         <template if:false={displayHolidays.length}>
+                            <div class="no-holidays-msg">
+                                <p>No future holidays found.</p>
+                            </div>
+                        </template>
+                    </div>
+                     <template if:false={upcomingHolidays.length}>
+                        <p class="slds-text-body_small slds-m-top_small">No holidays data available.</p>
+                    </template>
+
+
+                </div>
+
+                <!-- RIGHT COLUMN: Submit Leave Request & Team Status -->
+                <div class="slds-col slds-size_1-of-1 slds-medium-size_9-of-12">
+                    <div class="slds-box slds-theme_default submit-request-container slds-m-bottom_medium">
+                         <c-leave-request current-user={profileData} onleavesubmitted={handleRefresh}></c-leave-request>
+                    </div>
+
+
+                </div>
+
+            </div>
+        </div>
+
+        <!-- My Leave Requests Table (Bottom Full Width) -->
+
+
+
+            </lightning-tab>
+
+            <lightning-tab label="My Leave Requests" icon-name="standard:event">
+                <div class="section slds-m-top_medium">
+                    <h3 class="section-heading">My Leave Requests</h3>
+                    <template if:true={myLeaves.length}>
+                        <div class="slds-box slds-theme_default slds-p-around_none table-container my-leaves-container">
+                            <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_striped" aria-label="My Leave Requests">
+                                <thead>
+                                    <tr class="slds-line-height_reset">
+                                        <th class="" scope="col">
+                                            <div class="slds-truncate" title="Request ID">Request ID</div>
+                                        </th>
+                                        <th class="" scope="col">
+                                            <div class="slds-truncate" title="Leave Details">Leave Details</div>
+                                        </th>
+                                        <th class="" scope="col">
+                                            <div class="slds-truncate" title="Duration">Duration</div>
+                                        </th>
+                                        <th class="" scope="col">
+                                            <div class="slds-truncate" title="Status">Status</div>
+                                        </th>
+                                        <th class="" scope="col">
+                                            <div class="slds-truncate" title="Approver Comment">Approver Comment</div>
+                                        </th>
+                                        <th class="" scope="col">
+                                            <div class="slds-truncate" title="Submitted Date">Applied On</div>
+                                        </th>
+                                        <th class="" scope="col">
+                                            <div class="slds-truncate" title="Action">Action</div>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <template for:each={myLeaves} for:item="leave">
+                                        <tr key={leave.Id} class="slds-hint-parent">
+                                            <td data-label="Request ID">
+                                                <div class="slds-truncate" title={leave.Name}><strong>{leave.Name}</strong></div>
+                                            </td>
+                                            <td data-label="Leave Details">
+                                                <div class="slds-truncate" title={leave.Leave_Type__r.Name}>
+                                                    <div class="slds-text-body_regular">{leave.Leave_Type__r.Name}</div>
+                                                    <div class="slds-text-color_weak slds-text-body_small">{leave.Reason__c}</div>
+                                                </div>
+                                            </td>
+                                            <td data-label="Duration">
+                                                <div>
+                                                    <div class="slds-text-body_small">
+                                                        <lightning-formatted-date-time value={leave.From_Date__c}></lightning-formatted-date-time> 
+                                                        &nbsp;-&nbsp; 
+                                                        <lightning-formatted-date-time value={leave.To_Date__c}></lightning-formatted-date-time>
+                                                    </div>
+                                                    <span class="slds-badge slds-theme_info slds-m-top_xx-small">
+                                                        {leave.Number_of_Days__c} Days
+                                                    </span>
+                                                </div>
+                                            </td>
+                                            <td data-label="Status">
+                                                <span class={leave.badgeClass}>
+                                                    {leave.formattedStatus}
+                                                </span>
+                                            </td>
+                                            <td data-label="Approver Comment">
+                                                <div class="slds-truncate" title={leave.Manager_Approval_Comment__c}>
+                                                    {leave.Manager_Approval_Comment__c}
+                                                </div>
+                                            </td>
+                                            <td data-label="Applied On">
+                                                <div class="slds-truncate">
+                                                    <lightning-formatted-date-time value={leave.Submitted_Date__c} year="numeric" month="short" day="2-digit"></lightning-formatted-date-time>
+                                                </div>
+                                            </td>
+                                            <td data-label="Action">
+                                                <template if:true={leave.isDeletable}>
+                                                    <!-- Use Menu for Approved Leaves to offer Partial Cancel -->
+                                                    <template if:true={leave.isApproved}>
+                                                        <lightning-button-menu alternative-text="Show menu" variant="border-filled" icon-size="x-small" menu-alignment="right" onselect={handleMenuSelect} data-id={leave.Id}>
+                                                            <lightning-menu-item value="partial" label="Shorten Leave (Edit End Date)" prefix-icon-name="utility:date_input"></lightning-menu-item>
+                                                            <lightning-menu-item value="cancel" label="Cancel Full Request" prefix-icon-name="utility:close"></lightning-menu-item>
+                                                        </lightning-button-menu>
+                                                    </template>
+                                                    <!-- Simple Delete for Pending/Rejected -->
+                                                    <template if:false={leave.isApproved}>
+                                                        <lightning-button-icon icon-name="utility:delete" 
+                                                                            variant="border-filled" 
+                                                                            alternative-text="Cancel Request" 
+                                                                            title="Cancel/Delete Request"
+                                                                            class="slds-text-color_destructive"
+                                                                            data-id={leave.Id}
+                                                                            onclick={handleDeleteRequest}>
+                                                        </lightning-button-icon>
+                                                    </template>
+                                                </template>
+                                            </td>
+                                        </tr>
+                                    </template>
+                                </tbody>
+                            </table>
+                        </div>
+                    </template>
+                    <template if:false={myLeaves.length}>
+                        <div class="slds-box slds-theme_shade slds-text-align_center">
+                            <p if:false={errorMessage}>No leave requests found.</p>
+                            <p if:true={errorMessage} class="slds-text-color_error">{errorMessage}</p>
+                        </div>
+                    </template>
+                </div>
+            </lightning-tab>
+
+            <lightning-tab label="Company Policy" icon-name="standard:article">
+                <c-company-policy-display></c-company-policy-display>
+            </lightning-tab>
+            <lightning-tab label="Hardware" icon-name="standard:case">
+                <div class="slds-p-around_medium" style="background: white; border-radius: 8px;">
+                    <lightning-tabset variant="scoped">
+                        <lightning-tab label="My Hardware Requests" icon-name="standard:service_request">
+                            <div class="slds-grid slds-grid_align-spread slds-m-bottom_medium">
+                                <h2 class="slds-text-heading_medium">My Hardware Requests</h2>
+                                <lightning-button label="New Hardware Request" variant="brand" onclick={openHardwareRequestModal}></lightning-button>
+                            </div>
+                            <div class="slds-table--header-fixed_container slds-m-bottom_large" style="height:250px;">
+                                <div class="slds-scrollable_y" style="height:100%;">
+                                    <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table--header-fixed">
+                                        <thead>
+                                            <tr class="slds-line-height_reset">
+                                                <th scope="col"><div class="slds-truncate slds-cell-fixed" title="Request ID">Request ID</div></th>
+                                                <th scope="col"><div class="slds-truncate slds-cell-fixed" title="Type">Type</div></th>
+                                                <th scope="col"><div class="slds-truncate slds-cell-fixed" title="Status">Status</div></th>
+                                                <th scope="col"><div class="slds-truncate slds-cell-fixed" title="Admin Comment">Admin Comment</div></th>
+                                                <th scope="col"><div class="slds-truncate slds-cell-fixed" title="HR/Manager Comment">HR/Manager Comment</div></th>
+                                                <th scope="col"><div class="slds-truncate slds-cell-fixed" title="Date">Date</div></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <template for:each={myHardwareRequests} for:item="req">
+                                                <tr key={req.Id}>
+                                                    <td data-label="Request ID"><strong>{req.Name}</strong></td>
+                                                    <td data-label="Type">{req.Hardware_Type__c}</td>
+                                                    <td data-label="Status">{req.Status__c}</td>
+                                                    <td data-label="Admin Comment"><div class="slds-truncate" title={req.Admin_Comment__c}>{req.Admin_Comment__c}</div></td>
+                                                    <td data-label="HR/Manager Comment"><div class="slds-truncate" title={req.HR_Manager_Comment__c}>{req.HR_Manager_Comment__c}</div></td>
+                                                    <td data-label="Date"><lightning-formatted-date-time value={req.CreatedDate} year="numeric" month="short" day="2-digit"></lightning-formatted-date-time></td>
+                                                </tr>
+                                            </template>
+                                        </tbody>
+                                    </table>
+                                    <template if:false={myHardwareRequests.length}>
+                                        <div class="slds-p-around_small slds-text-align_center">No hardware requests found.</div>
+                                    </template>
+                                </div>
+                            </div>
+                        </lightning-tab>
+
+                        <lightning-tab label="My Assigned Hardware" icon-name="standard:service_contract">
+                            <h2 class="slds-text-heading_medium slds-m-bottom_medium slds-m-top_medium">My Assigned Hardware</h2>
+                            <div class="slds-table--header-fixed_container slds-m-bottom_large" style="height:250px;">
+                                <div class="slds-scrollable_y" style="height:100%;">
+                                    <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table--header-fixed">
+                                        <thead>
+                                            <tr class="slds-line-height_reset">
+                                                <th scope="col" style="width: 50px;"></th>
+                                                <th scope="col"><div class="slds-truncate slds-cell-fixed" title="Name">Name</div></th>
+                                                <th scope="col"><div class="slds-truncate slds-cell-fixed" title="Type">Type</div></th>
+                                                <th scope="col"><div class="slds-truncate slds-cell-fixed" title="Serial Number">Serial Number</div></th>
+                                                <th scope="col"><div class="slds-truncate slds-cell-fixed" title="Assigned Date">Assigned Date</div></th>
+                                                <th scope="col"><div class="slds-truncate slds-cell-fixed" title="Username">Username</div></th>
+                                                <th scope="col"><div class="slds-truncate slds-cell-fixed" title="Password">Password</div></th>
+                                                <th scope="col"><div class="slds-truncate slds-cell-fixed" title="Action">Action</div></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <template for:each={myAssignedHardware} for:item="hw">
+                                                <tr key={hw.Id}>
+                                                    <td>
+                                                        <template if:true={hw.Image_URL__c}>
+                                                            <img src={hw.Image_URL__c} style="width: 35px; height: 35px; border-radius: 4px; object-fit: cover;">
+                                                        </template>
+                                                    </td>
+                                                    <td data-label="Name"><strong>{hw.Name}</strong></td>
+                                                    <td data-label="Type">{hw.Type__c}</td>
+                                                    <td data-label="Serial Number">{hw.Serial_Number__c}</td>
+                                                    <td data-label="Assigned Date"><lightning-formatted-date-time value={hw.Date_Assigned__c} year="numeric" month="short" day="2-digit"></lightning-formatted-date-time></td>
+                                                    <td data-label="Username">{hw.Username__c}</td>
+                                                    <td data-label="Password">{hw.Password__c}</td>
+                                                    <td data-label="Action">
+                                                        <lightning-button label="Raise Issue" variant="neutral" onclick={openRaiseIssueModal} data-id={hw.Id}></lightning-button>
+                                                    </td>
+                                                </tr>
+                                            </template>
+                                        </tbody>
+                                    </table>
+                                    <template if:false={myAssignedHardware.length}>
+                                        <div class="slds-p-around_small slds-text-align_center">No assigned hardware found.</div>
+                                    </template>
+                                </div>
+                            </div>
+                        </lightning-tab>
+
+                        <lightning-tab label="My Hardware Tickets" icon-name="standard:support">
+                            <h2 class="slds-text-heading_medium slds-m-bottom_medium slds-m-top_medium">My Hardware Tickets</h2>
+                            <div class="slds-table--header-fixed_container" style="height:250px;">
+                                <div class="slds-scrollable_y" style="height:100%;">
+                                    <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table--header-fixed">
+                                         <thead>
+                                             <tr class="slds-line-height_reset">
+                                                 <th scope="col"><div class="slds-truncate slds-cell-fixed" title="Ticket Number">Ticket Number</div></th>
+                                                 <th scope="col"><div class="slds-truncate slds-cell-fixed" title="Hardware">Hardware</div></th>
+                                                 <th scope="col"><div class="slds-truncate slds-cell-fixed" title="Status">Status</div></th>
+                                                 <th scope="col"><div class="slds-truncate slds-cell-fixed" title="Notes">Notes</div></th>
+                                                 <th scope="col"><div class="slds-truncate slds-cell-fixed" title="Date">Date</div></th>
+                                                 <th scope="col"><div class="slds-truncate slds-cell-fixed" title="Action">Action</div></th>
+                                             </tr>
+                                         </thead>
+                                         <tbody>
+                                             <template for:each={myHardwareTickets} for:item="ticket">
+                                                 <tr key={ticket.Id}>
+                                                     <td data-label="Ticket Number"><strong>{ticket.Name}</strong></td>
+                                                     <td data-label="Hardware">{ticket.Hardware__r.Name}</td>
+                                                     <td data-label="Status">{ticket.Status__c}</td>
+                                                     <td data-label="Notes"><div class="slds-truncate" title={ticket.Notes__c}>{ticket.Notes__c}</div></td>
+                                                     <td data-label="Date"><lightning-formatted-date-time value={ticket.CreatedDate} year="numeric" month="short" day="2-digit"></lightning-formatted-date-time></td>
+                                                     <td data-label="Action">
+                                                         <lightning-button-icon icon-name="utility:delete" alternative-text="Delete" title="Delete Ticket" class="slds-text-color_destructive" onclick={handleDeleteTicket} data-id={ticket.Id}></lightning-button-icon>
+                                                     </td>
+                                                 </tr>
+                                             </template>
+                                         </tbody>
+                                    </table>
+                                    <template if:false={myHardwareTickets.length}>
+                                        <div class="slds-p-around_small slds-text-align_center">No hardware tickets found.</div>
+                                    </template>
+                                </div>
+                            </div>
+                        </lightning-tab>
+                    </lightning-tabset>
+                </div>
+            </lightning-tab>
+            <template if:true={currentUser.isTechnicalSystemAdmin}>
+                <lightning-tab label="Hardware Administration" icon-name="standard:maintenance_plan">
+                    <c-hardware-admin-dashboard></c-hardware-admin-dashboard>
+                </lightning-tab>
+            </template>
+        </lightning-tabset>
+
+    </div>
+
+    <!-- Partial Cancellation / Edit Modal -->
+    <template if:true={isPartialModalOpen}>
+        <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closePartialModal}>
+                        <lightning-icon icon-name="utility:close" alternative-text="close" variant="inverse" size="small"></lightning-icon>
+                        <span class="slds-assistive-text">Close</span>
+                    </button>
+                    <h2 class="slds-text-heading_medium slds-hyphenate">Shorten Leave Duration</h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium">
+                    <div class="slds-notify slds-notify_alert slds-theme_info slds-m-bottom_small" role="alert">
+                        <span class="slds-assistive-text">info</span>
+                        <h2>Select a new earlier <strong>End Date</strong>. The remaining days will be cancelled.</h2>
+                    </div>
+                    
+                    <div class="slds-grid slds-gutters">
+                        <div class="slds-col slds-size_1-of-2">
+                            <lightning-input type="date" label="Current Start Date" value={selectedLeave.From_Date__c} disabled></lightning-input>
+                        </div>
+                        <div class="slds-col slds-size_1-of-2">
+                             <lightning-input type="date" label="Current End Date" value={selectedLeave.To_Date__c} disabled></lightning-input>
+                        </div>
+                    </div>
+
+                    <div class="slds-m-top_medium">
+                        <lightning-input type="date" 
+                                         label="New End Date" 
+                                         value={partialEndDate} 
+                                         min={selectedLeave.From_Date__c}
+                                         max={partialMaxDate}
+                                         onchange={handleDateChange}
+                                         required
+                                         message-when-range-overflow="Date must be before the original end date."
+                                         message-when-range-underflow="Date must be on or after start date.">
+                        </lightning-input>
+                        <lightning-input type="checkbox" 
+                                         label="Mark this day as Half Day (Afternoon Off)" 
+                                         checked={isHalfDay}
+                                         onchange={handleHalfDayChange}
+                                         class="slds-m-top_small">
+                        </lightning-input>
+                        <p class="slds-text-body_small slds-text-color_weak slds-m-top_x-small">
+                            * To <strong>extend</strong> your leave, please submit a new leave request for the additional days.
+                        </p>
+                    </div>
+                </div>
+                <footer class="slds-modal__footer">
+                    <button class="slds-button slds-button_neutral" onclick={closePartialModal}>Cancel</button>
+                    <button class="slds-button slds-button_brand" onclick={submitPartialCancellation}>Confirm New End Date</button>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+
+    <!-- Profile Edit Modal -->
+    <!-- Profile Edit Modal (Reusable) -->
+    <c-user-profile-modal 
+        user-id={currentUser.contactId} 
+        is-open={isProfileOpen} 
+        onclose={closeProfile} 
+        onprofileupdate={handleProfileUpdate}>
+    </c-user-profile-modal>
+
+
+
+    <!-- Hardware Request Modal -->
+    <template if:true={isHardwareRequestModalOpen}>
+        <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <lightning-button-icon class="slds-modal__close" icon-name="utility:close" alternative-text="Close" onclick={closeHardwareRequestModal} variant="bare-inverse" size="large"></lightning-button-icon>
+                    <h2 class="slds-text-heading_medium">New Hardware Request</h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium">
+                    <lightning-combobox label="Hardware Type" value={hardwareType} options={hardwareTypeOptions} onchange={handleHardwareTypeChange} required></lightning-combobox>
+                    <lightning-textarea label="Description / Reason" value={hardwareDescription} onchange={handleHardwareDescriptionChange} required class="slds-m-top_small"></lightning-textarea>
+                </div>
+                <footer class="slds-modal__footer">
+                    <lightning-button label="Cancel" onclick={closeHardwareRequestModal}></lightning-button>
+                    <lightning-button label="Submit Request" variant="brand" onclick={submitHardwareRequest} class="slds-m-left_x-small"></lightning-button>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+
+    <!-- Raise Ticket Modal -->
+    <template if:true={isTicketModalOpen}>
+        <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+            <div class="slds-modal__container">
+                <header class="slds-modal__header">
+                    <lightning-button-icon class="slds-modal__close" icon-name="utility:close" alternative-text="Close" onclick={closeTicketModal} variant="bare-inverse" size="large"></lightning-button-icon>
+                    <h2 class="slds-text-heading_medium">Raise Hardware Issue</h2>
+                </header>
+                <div class="slds-modal__content slds-p-around_medium">
+                    <lightning-textarea label="Describe the Issue" value={ticketDescription} onchange={handleTicketDescriptionChange} required></lightning-textarea>
+                </div>
+                <footer class="slds-modal__footer">
+                    <lightning-button label="Cancel" onclick={closeTicketModal}></lightning-button>
+                    <lightning-button label="Submit Ticket" variant="brand" onclick={submitHardwareTicket} class="slds-m-left_x-small"></lightning-button>
+                </footer>
+            </div>
+        </section>
+        <div class="slds-backdrop slds-backdrop_open"></div>
+    </template>
+
+</template>

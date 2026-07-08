@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Guardian_Phone__c</fullName>
+    <description>Phone number of the employee's guardian.</description>
+    <externalId>false</externalId>
+    <label>Guardian Phone</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <type>Phone</type>
+</CustomField>

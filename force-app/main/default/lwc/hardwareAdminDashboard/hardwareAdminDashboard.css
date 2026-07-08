@@ -1,0 +1,38 @@
+.hardware-container {
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+}
+
+.custom-table {
+    border-top: 1px solid #e2e8f0;
+}
+
+.custom-table th {
+    background-color: #f8fafc;
+    font-weight: 600;
+}
+
+.hardware-form-container {
+    max-width: 800px;
+}
+
+.request-card {
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 1rem;
+    background: #f8fafc;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.request-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+    border-color: #cbd5e1;
+}
+
+.request-header {
+    border-bottom: 1px solid #e2e8f0;
+    padding-bottom: 0.5rem;
+}

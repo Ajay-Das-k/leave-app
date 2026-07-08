@@ -1,0 +1,247 @@
+.modal-enhanced {
+    max-width: 95%;
+    width: 800px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+    animation: slideDown 0.3s ease-out;
+}
+
+.modal-header-enhanced {
+    background: linear-gradient(135deg, #4f46e5 0%, #3730a3 100%);
+    color: white;
+    padding: 1.5rem 2rem;
+    position: relative;
+}
+
+.modal-close-btn {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.modal-close-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.1);
+}
+
+.modal-header-content {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.header-icon {
+    --slds-c-icon-color-background: rgba(255, 255, 255, 0.25);
+    --slds-c-icon-color-foreground: white;
+    padding: 0.5rem;
+    border-radius: 8px;
+}
+
+.modal-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0;
+    line-height: 1.2;
+}
+
+.modal-subtitle {
+    font-size: 0.9rem;
+    opacity: 0.9;
+    margin: 0.25rem 0 0 0;
+}
+
+.modal-content-enhanced {
+    max-height: 70vh;
+    overflow-y: auto;
+    background-color: #f8fafc;
+}
+
+.password-notice {
+    display: flex;
+    align-items: center;
+    padding: 0.75rem 1rem;
+    background-color: #eff6ff;
+    border-left: 4px solid #3b82f6;
+    border-radius: 4px;
+    color: #1e3a8a;
+    font-size: 0.875rem;
+}
+
+.error-message {
+    padding: 0.75rem 1rem;
+    background-color: #fef2f2;
+    border-left: 4px solid #ef4444;
+    border-radius: 4px;
+    color: #991b1b;
+}
+
+.success-message {
+    padding: 0.75rem 1rem;
+    background-color: #f0fdf4;
+    border-left: 4px solid #22c55e;
+    border-radius: 4px;
+    color: #166534;
+}
+
+.modal-footer {
+    border-top: 1px solid #e2e8f0;
+    padding-top: 1rem;
+}
+
+.spinner {
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+    border: 2px solid currentColor;
+    border-right-color: transparent;
+    border-radius: 50%;
+    animation: spin 0.75s linear infinite;
+    margin-right: 0.5rem;
+    vertical-align: text-bottom;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Confetti & Success Screen animations */
+.success-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 1rem;
+    text-align: center;
+    animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+.checkmark-circle {
+    width: 80px;
+    height: 80px;
+    position: relative;
+    border-radius: 50%;
+    background-color: #22c55e;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 10px 15px -3px rgba(34, 197, 94, 0.3);
+}
+
+.checkmark-stem {
+    width: 6px;
+    height: 30px;
+    background-color: #fff;
+    position: absolute;
+    left: 42px;
+    top: 24px;
+    transform: rotate(45deg);
+    border-radius: 3px;
+}
+
+.checkmark-kick {
+    width: 18px;
+    height: 6px;
+    background-color: #fff;
+    position: absolute;
+    left: 28px;
+    top: 44px;
+    transform: rotate(45deg);
+    border-radius: 3px;
+}
+
+.success-title {
+    font-size: 1.75rem;
+    font-weight: 800;
+    color: #1e293b;
+    margin: 0 0 0.5rem 0;
+}
+
+.success-text {
+    font-size: 1rem;
+    color: #64748b;
+    max-width: 400px;
+}
+
+@keyframes popIn {
+    0% { transform: scale(0.6); opacity: 0; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.confetti-container {
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    width: 1px;
+    height: 1px;
+    overflow: visible;
+    z-index: 9999;
+    pointer-events: none;
+}
+
+.confetti-piece {
+    position: absolute;
+    width: 10px;
+    height: 20px;
+    background: #ffd300;
+    opacity: 0;
+    border-radius: 2px;
+}
+
+.confetti-piece:nth-child(1) { background: #f2d715; left: -10px; top: -10px; animation: burst1 1.5s ease-out infinite; }
+.confetti-piece:nth-child(2) { background: #e52912; left: 10px; top: -20px; animation: burst2 1.5s ease-out infinite; }
+.confetti-piece:nth-child(3) { background: #002ffd; left: -20px; top: 10px; animation: burst3 1.5s ease-out infinite; }
+.confetti-piece:nth-child(4) { background: #00fe14; left: 20px; top: 20px; animation: burst4 1.5s ease-out infinite; }
+.confetti-piece:nth-child(5) { background: #fb00fb; left: -30px; top: -30px; animation: burst5 1.5s ease-out infinite; }
+.confetti-piece:nth-child(6) { background: #00ffff; left: 30px; top: -10px; animation: burst1 1.2s ease-out infinite; }
+.confetti-piece:nth-child(7) { background: #ff7f00; left: -40px; top: 20px; animation: burst2 1.2s ease-out infinite; }
+.confetti-piece:nth-child(8) { background: #8b00ff; left: 40px; top: 40px; animation: burst3 1.2s ease-out infinite; }
+.confetti-piece:nth-child(9) { background: #ffd700; left: 5px; top: 30px; animation: burst4 1.8s ease-out infinite; }
+.confetti-piece:nth-child(10) { background: #ff1493; left: -15px; top: -45px; animation: burst5 1.8s ease-out infinite; }
+.confetti-piece:nth-child(11) { background: #32cd32; left: -25px; top: -15px; animation: burst1 1.4s ease-out infinite; }
+.confetti-piece:nth-child(12) { background: #1e90ff; left: 25px; top: -35px; animation: burst2 1.4s ease-out infinite; }
+
+@keyframes burst1 {
+    0% { transform: translate(0, 0) rotate(0deg); opacity: 1; }
+    100% { transform: translate(-150px, -150px) rotate(360deg); opacity: 0; }
+}
+
+@keyframes burst2 {
+    0% { transform: translate(0, 0) rotate(0deg); opacity: 1; }
+    100% { transform: translate(150px, -150px) rotate(-360deg); opacity: 0; }
+}
+
+@keyframes burst3 {
+    0% { transform: translate(0, 0) rotate(0deg); opacity: 1; }
+    100% { transform: translate(-120px, 120px) rotate(180deg); opacity: 0; }
+}
+
+@keyframes burst4 {
+    0% { transform: translate(0, 0) rotate(0deg); opacity: 1; }
+    100% { transform: translate(120px, 120px) rotate(-180deg); opacity: 0; }
+}
+
+@keyframes burst5 {
+    0% { transform: translate(0, 0) rotate(0deg); opacity: 1; }
+    100% { transform: translate(0px, -200px) rotate(720deg); opacity: 0; }
+}

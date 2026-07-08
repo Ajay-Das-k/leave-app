@@ -1,0 +1,59 @@
+<template>
+    <div class="slds-box slds-theme_default">
+        <h2 class="slds-text-heading_medium slds-m-bottom_medium">Submit New Leave Request</h2>
+        
+        <div class="slds-grid slds-gutters">
+            <div class="slds-col slds-size_1-of-2">
+                <lightning-input label="Start Date" type="date" value={startDate} min={minDate} onchange={handleStartDate} required></lightning-input>
+            </div>
+            <div class="slds-col slds-size_1-of-2">
+                <lightning-input label="End Date" type="date" value={endDate} min={minDate} onchange={handleEndDate} disabled={isHalfDay} required></lightning-input>
+            </div>
+        </div>
+
+        <div class="slds-m-top_medium">
+            <div class="slds-grid slds-gutters">
+                <div class="slds-col slds-size_1-of-2">
+                    <!-- Clean Single Label Layout -->
+                    <div class="toggle-container slds-m-bottom_x-small">
+                        <span class="toggle-label">Half Day Application</span>
+                        <lightning-input type="toggle" variant="label-hidden" 
+                                         checked={isHalfDay} onchange={handleHalfDayChange} 
+                                         message-toggle-active="Yes" message-toggle-inactive="No"
+                                         class="slds-m-around_none"></lightning-input>
+                    </div>
+
+                    <template if:true={isHalfDay}>
+                        <div class="slds-m-top_x-small">
+                            <lightning-radio-group name="sessionGroup"
+                                                   label="Select Session"
+                                                   options={sessionOptions}
+                                                   value={halfDaySession}
+                                                   onchange={handleSessionChange}
+                                                   type="button">
+                            </lightning-radio-group>
+                        </div>
+                    </template>
+                </div>
+                <div class="slds-col slds-size_1-of-2">
+                     <div class="slds-text-color_success slds-text-title_bold slds-m-top_medium">
+                        {durationMessage}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slds-m-top_small">
+            <lightning-combobox label="Leave Type" value={leaveTypeId} placeholder="Select Leave Type" 
+                               options={leaveTypeOptions} onchange={handleLeaveType} required></lightning-combobox>
+        </div>
+
+        <div class="slds-m-top_small">
+            <lightning-textarea label="Reason" value={reason} onchange={handleReason} required></lightning-textarea>
+        </div>
+
+        <div class="slds-m-top_medium slds-text-align_right">
+            <lightning-button variant="brand" label="Submit Request" onclick={submitLeave} disabled={isCalculating}></lightning-button>
+        </div>
+    </div>
+</template>

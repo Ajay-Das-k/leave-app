@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Can_Apply_Maternity__c</fullName>
+    <formula>AND( NOT(Is_Probation__c), ISPICKVAL(Gender__c, &quot;Female&quot;) )</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Can Apply Maternity</label>
+    <type>Checkbox</type>
+</CustomField>

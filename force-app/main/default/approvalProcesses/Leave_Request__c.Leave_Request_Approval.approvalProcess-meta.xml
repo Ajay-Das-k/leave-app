@@ -29,7 +29,7 @@
         <allowDelegate>false</allowDelegate>
         <assignedApprover>
             <approver>
-                <name>leaveapp@crma.leave.mng.app</name>
+                <name>ajay.tester@ajaytesting.com</name>
                 <type>user</type>
             </approver>
             <whenMultipleApprovers>FirstResponse</whenMultipleApprovers>

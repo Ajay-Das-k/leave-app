@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Employee_ID_Seq__c</fullName>
+    <displayFormat>CT-{0000}</displayFormat>
+    <externalId>false</externalId>
+    <label>Employee ID Seq</label>
+    <type>AutoNumber</type>
+</CustomField>

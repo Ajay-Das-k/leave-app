@@ -12,3 +12,10 @@ package.xml
 **/__tests__/**
 
 node_modules/
+
+# Ignore all standard layouts, keep custom layouts
+**/layouts/
+!**/layouts/Contact-Leave_App.layout-meta.xml
+!**/layouts/Leave_Balance__c-Leave Balance Layout.layout-meta.xml
+!**/layouts/Leave_Request__c-Leave Request Layout.layout-meta.xml
+!**/layouts/Leave_Type__c-Leave Type Layout.layout-meta.xml

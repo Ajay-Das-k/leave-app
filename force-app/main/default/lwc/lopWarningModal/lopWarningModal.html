@@ -1,0 +1,27 @@
+<template>
+    <lightning-modal-header label="Leave Quota Limit Exceeded (Loss of Pay Warning)"></lightning-modal-header>
+    <lightning-modal-body>
+        <p class="slds-m-bottom_medium">
+            You have exceeded the leave limit for the first half of the year (Jan - Jun).
+        </p>
+        
+        <div class="slds-box slds-box_x-small slds-theme_shade slds-m-bottom_medium">
+            <h3 class="slds-text-heading_small slds-m-bottom_x-small">Current Policy Limits:</h3>
+            <ul class="slds-list_dotted">
+                <li>Casual Leave: <strong>Max 6 Days</strong></li>
+                <li>Sick Leave: <strong>Max 3 Days</strong></li>
+            </ul>
+        </div>
+
+        <div class="slds-text-color_error slds-text-title_bold slds-m-bottom_small">
+            Action:
+        </div>
+        <p>
+            This leave request will be processed as <strong>Loss of Pay (LOP)</strong>.
+        </p>
+    </lightning-modal-body>
+    <lightning-modal-footer>
+        <lightning-button label="Cancel" onclick={handleCancel} class="slds-m-right_small"></lightning-button>
+        <lightning-button label="OK" variant="brand" onclick={handleOk}></lightning-button>
+    </lightning-modal-footer>
+</template>

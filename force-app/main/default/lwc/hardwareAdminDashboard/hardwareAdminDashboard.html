@@ -1,0 +1,600 @@
+<template>
+    <div class="slds-box slds-theme_default hardware-container">
+        
+        <div class="header-section slds-m-bottom_medium slds-media slds-media_center">
+            <div class="slds-media__figure">
+                <lightning-icon icon-name="standard:service_resource" size="large"></lightning-icon>
+            </div>
+            <div class="slds-media__body">
+                <h1 class="slds-text-heading_large slds-text-color_default slds-m-bottom_xx-small">Hardware Administration</h1>
+                <p class="slds-text-body_regular slds-text-color_weak">Manage hardware inventory, assignments, and employee requests.</p>
+            </div>
+        </div>
+
+        <lightning-tabset variant="scoped">
+            
+            <!-- Tab 1: Hardware Assigned List -->
+            <lightning-tab label="Hardware Assigned List" icon-name="utility:desktop">
+                <div class="slds-p-around_small">
+                    <div class="slds-grid slds-grid_align-spread slds-m-bottom_medium">
+                        <h2 class="slds-text-heading_small">Assigned Hardware Inventory</h2>
+                        <div style="display: flex; gap: 10px; align-items: center;">
+                            <lightning-input type="search" placeholder="Search by hardware or name..." onchange={handleSearchChange} variant="label-hidden" style="width: 250px;"></lightning-input>
+                            <lightning-button-icon icon-name="utility:refresh" alternative-text="Refresh" onclick={loadInventory}></lightning-button-icon>
+                        </div>
+                    </div>
+
+                    <div if:true={inventoryLoading} class="slds-is-relative">
+                        <lightning-spinner size="small"></lightning-spinner>
+                    </div>
+
+                    <div if:false={inventoryLoading} class="slds-scrollable_y" style="max-height: 500px;">
+                        <table class="slds-table slds-table_cell-buffer slds-table_bordered custom-table">
+                            <thead>
+                                <tr class="slds-line-height_reset">
+                                    <th scope="col" style="width: 50px;"></th>
+                                    <th scope="col"><div class="slds-truncate" title="Name">Hardware Name</div></th>
+                                    <th scope="col"><div class="slds-truncate" title="Type">Type</div></th>
+                                    <th scope="col"><div class="slds-truncate" title="Serial">Serial No.</div></th>
+                                    <th scope="col"><div class="slds-truncate" title="Status">Status</div></th>
+                                    <th scope="col"><div class="slds-truncate" title="Location">Location</div></th>
+                                    <th scope="col"><div class="slds-truncate" title="Assigned To">Assigned To</div></th>
+                                    <th scope="col"><div class="slds-truncate" title="Assigned Date">Assigned Date</div></th>
+                                    <th scope="col"><div class="slds-truncate" title="OS">OS</div></th>
+                                    <th scope="col"><div class="slds-truncate" title="YOM">YOM</div></th>
+                                    <th scope="col"><div class="slds-truncate" title="Life Span">Life Span</div></th>
+                                    <th scope="col"><div class="slds-truncate" title="Life Consumed">Life Consumed</div></th>
+                                    <th scope="col"><div class="slds-truncate" title="Action">Action</div></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <template for:each={filteredInventoryList} for:item="item">
+                                    <tr key={item.Id}>
+                                        <td>
+                                            <template if:true={item.Image_URL__c}>
+                                                <img src={item.Image_URL__c} style="width: 35px; height: 35px; border-radius: 4px; object-fit: cover;">
+                                            </template>
+                                        </td>
+                                        <td><div class="slds-truncate"><strong>{item.Name}</strong></div></td>
+                                        <td><div class="slds-truncate">{item.Type__c}</div></td>
+                                        <td><div class="slds-truncate">{item.Serial_Number__c}</div></td>
+                                        <td>
+                                            <span class={item.statusClass}>{item.Status__c}</span>
+                                        </td>
+                                        <td><div class="slds-truncate">{item.Location__c}</div></td>
+                                        <td>
+                                            <div class="slds-truncate">
+                                                <template if:true={item.Assigned_To__c}>
+                                                    {item.Assigned_To__r.Name}
+                                                </template>
+                                                <template if:false={item.Assigned_To__c}>
+                                                    <span class="slds-text-color_weak">-</span>
+                                                </template>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="slds-truncate">
+                                                <template if:true={item.Date_Assigned__c}>
+                                                    <lightning-formatted-date-time value={item.Date_Assigned__c} year="numeric" month="short" day="2-digit" time-zone="UTC"></lightning-formatted-date-time>
+                                                </template>
+                                                <template if:false={item.Date_Assigned__c}>
+                                                    <span class="slds-text-color_weak">-</span>
+                                                </template>
+                                            </div>
+                                        </td>
+                                        <td><div class="slds-truncate">{item.OS__c}</div></td>
+                                        <td><div class="slds-truncate">{item.Year_of_Manufacture__c}</div></td>
+                                        <td><div class="slds-truncate">{item.Expected_Life_Span_Years__c}</div></td>
+                                        <td>
+                                            <div class="slds-truncate">
+                                                <template if:true={item.Life_Span_Consumed_Percentage__c}>
+                                                    <lightning-progress-bar value={item.Life_Span_Consumed_Percentage__c} size="small" variant="circular"></lightning-progress-bar>
+                                                    <span style="font-size: 0.75rem;">{item.Life_Span_Consumed_Percentage__c}%</span>
+                                                </template>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <lightning-button-icon icon-name="utility:preview" alternative-text="View Details" onclick={openDetailsModal} data-id={item.Id} class="slds-m-right_xx-small"></lightning-button-icon>
+                                            <lightning-button-icon icon-name="utility:edit" alternative-text="Edit" onclick={openEditModal} data-id={item.Id}></lightning-button-icon>
+                                            <template if:true={item.Assigned_To__c}>
+                                                <lightning-button-icon icon-name="utility:clear" alternative-text="Unassign" variant="border-filled" class="slds-m-left_xx-small" onclick={handleUnassignHardware} data-id={item.Id}></lightning-button-icon>
+                                            </template>
+                                            <template if:true={item.showCautionBtn}>
+                                                <lightning-button label="Sent Caution Ticket" variant="destructive" onclick={handleSendCautionTicket} data-id={item.Id} data-contactid={item.Assigned_To__c} class="slds-m-left_xx-small" size="small"></lightning-button>
+                                            </template>
+                                        </td>
+                                    </tr>
+                                </template>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </lightning-tab>
+
+            <!-- Tab 2: Add New Hardware -->
+            <lightning-tab label="Add New Hardware" icon-name="utility:add">
+                <div class="slds-p-around_small hardware-form-container">
+                    <h2 class="slds-text-heading_small slds-m-bottom_medium">Add Hardware to Inventory</h2>
+                    
+                    <div class="slds-grid slds-wrap slds-gutters">
+                        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-m-bottom_small">
+                            <lightning-input label="Hardware Name" value={newHardware.name} onchange={handleHardwareChange} name="name" required></lightning-input>
+                        </div>
+                        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-m-bottom_small">
+                            <lightning-input label="Serial Number" value={newHardware.serialNumber} onchange={handleHardwareChange} name="serialNumber"></lightning-input>
+                        </div>
+                        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-m-bottom_small">
+                            <lightning-combobox label="Hardware Type" value={newHardware.type} options={typeOptions} onchange={handleHardwareChange} name="type" required></lightning-combobox>
+                        </div>
+                        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-m-bottom_small">
+                            <lightning-combobox label="Status" value={newHardware.status} options={statusOptions} onchange={handleHardwareChange} name="status" required></lightning-combobox>
+                        </div>
+                        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-m-bottom_small">
+                            <lightning-combobox label="Location" value={newHardware.location} options={locationOptions} onchange={handleHardwareChange} name="location" required></lightning-combobox>
+                        </div>
+                        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-m-bottom_small">
+                            <lightning-record-picker label="Assign To (Optional)" object-api-name="Contact" value={newHardware.assignedToId} onchange={handleAssignChange} placeholder="Search for Employee..."></lightning-record-picker>
+                        </div>
+                        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-m-bottom_small">
+                            <lightning-input type="number" label="Year of Manufacture" value={newHardware.yearOfManufacture} onchange={handleHardwareChange} name="yearOfManufacture"></lightning-input>
+                        </div>
+                        <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-m-bottom_small">
+                            <lightning-input type="number" label="Expected Life Span (Years)" value={newHardware.expectedLifeSpan} onchange={handleHardwareChange} name="expectedLifeSpan"></lightning-input>
+                        </div>
+                        <template if:true={isNewNotesRequired}>
+                            <div class="slds-col slds-size_1-of-1 slds-m-bottom_small">
+                                <lightning-textarea label="Notes" value={newHardware.notes} onchange={handleHardwareChange} name="notes" placeholder="Enter details for maintenance or retirement..."></lightning-textarea>
+                            </div>
+                        </template>
+                        <template if:true={isLaptop}>
+                            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-m-bottom_small">
+                                <lightning-combobox label="Operating System" value={newHardware.os} options={osOptions} onchange={handleHardwareChange} name="os"></lightning-combobox>
+                            </div>
+                            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-m-bottom_small">
+                                <lightning-input label="Username" value={newHardware.username} onchange={handleHardwareChange} name="username"></lightning-input>
+                            </div>
+                            <div class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-m-bottom_small">
+                                <lightning-input type="password" label="Password" value={newHardware.password} onchange={handleHardwareChange} name="password"></lightning-input>
+                            </div>
+                        </template>
+                        <div class="slds-col slds-size_1-of-1 slds-m-bottom_small">
+                            <div class="form-group" style="padding: 0 10px;">
+                                <label style="display: block; font-size: 0.8rem; margin-bottom: 5px;">Hardware Image</label>
+                                <input 
+                                    type="file" 
+                                    accept="image/*"
+                                    onchange={handleHardwarePicSelect}>
+                            </div>
+                        </div>
+                    </div>
+
+                    <template if:true={showCropper}>
+                        <div class="cropper-container" style="text-align: center; margin: 15px 0; background: #f9f9f9; padding: 15px; border-radius: 8px;">
+                            <p style="font-size: 0.85rem; color: #666; margin-bottom: 8px;">Drag image to pan. Use slider to zoom.</p>
+                            <div style="width: 200px; height: 200px; overflow: hidden; border-radius: 12px; margin: 0 auto; border: 2px solid #ccc; position: relative;">
+                                <canvas class="crop-canvas" width="200" height="200" lwc:dom="manual"
+                                    onmousedown={handleCropDragStart}
+                                    onmousemove={handleCropDragMove}
+                                    onmouseup={handleCropDragEnd}
+                                    onmouseleave={handleCropDragEnd}
+                                    ontouchstart={handleCropDragStart}
+                                    ontouchmove={handleCropDragMove}
+                                    ontouchend={handleCropDragEnd}
+                                    style="cursor: move; touch-action: none; background: #eee;">
+                                </canvas>
+                            </div>
+                            <div style="margin-top: 15px; display: flex; align-items: center; justify-content: center; gap: 10px;">
+                                <label style="font-size: 0.85rem;">Zoom:</label>
+                                <input type="range" min="1" max="3" step="0.1" value={cropScale} oninput={handleCropScale} style="width: 150px;">
+                            </div>
+                            <lightning-button label="Confirm Crop" variant="neutral" onclick={applyCrop} class="slds-m-top_medium"></lightning-button>
+                        </div>
+                    </template>
+                    
+                    <template if:true={croppedImageBase64}>
+                        <div style="text-align: center; margin: 15px 0;">
+                            <p style="font-size: 0.85rem; color: green; margin-bottom: 5px;">✓ Image Ready</p>
+                            <img src={croppedImageBase64} style="width: 150px; height: 150px; border-radius: 12px; border: 2px solid #4CAF50;">
+                            <br>
+                            <button type="button" class="btn-text" onclick={removeHardwarePic} style="color: #d9534f; font-size: 0.8rem; border: none; background: none; cursor: pointer; margin-top: 8px;">Remove Image</button>
+                        </div>
+                    </template>
+
+                    <div class="slds-m-top_medium slds-text-align_right">
+                        <lightning-button label="Add Hardware" variant="brand" onclick={submitNewHardware}></lightning-button>
+                    </div>
+                </div>
+            </lightning-tab>
+
+            <!-- Tab 3: Requests -->
+            <lightning-tab label="Requests" icon-name="utility:inbox">
+                <div class="slds-p-around_small">
+                    <div class="slds-grid slds-grid_align-spread slds-m-bottom_medium">
+                        <h2 class="slds-text-heading_small">Hardware Requests from Employees</h2>
+                        <lightning-button-icon icon-name="utility:refresh" alternative-text="Refresh" onclick={loadRequests}></lightning-button-icon>
+                    </div>
+
+                    <div if:true={requestsLoading} class="slds-is-relative">
+                        <lightning-spinner size="small"></lightning-spinner>
+                    </div>
+                    <div if:false={requestsLoading}>
+                        <template if:false={hasPendingRequests}>
+                            <div class="slds-text-align_center slds-p-around_medium slds-text-color_weak">
+                                No pending hardware requests found.
+                            </div>
+                        </template>
+                        <template if:true={hasPendingRequests}>
+                            <div class="slds-grid slds-wrap slds-gutters">
+                                <template for:each={pendingRequests} for:item="req">
+                                    <div key={req.Id} class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-3 slds-m-bottom_medium">
+                                        <div class="request-card">
+                                            <div class="request-header slds-grid slds-grid_align-spread">
+                                                <strong>{req.Hardware_Type__c}</strong>
+                                                <span class={req.statusClass}>{req.Status__c}</span>
+                                            </div>
+                                            <div class="request-body slds-m-top_small">
+                                                <p><strong>Employee:</strong> {req.Employee__r.Name}</p>
+                                                <template if:true={req.Employee__r.Department__c}>
+                                                    <p><strong>Department:</strong> {req.Employee__r.Department__c}</p>
+                                                </template>
+                                                <template if:true={req.Employee__r.Position__c}>
+                                                    <p><strong>Position:</strong> {req.Employee__r.Position__c}</p>
+                                                </template>
+                                                <p><strong>Date:</strong> {req.formattedDate}</p>
+                                                <template if:true={req.HR_Manager_Comment__c}>
+                                                    <p><strong>Manager/HR Comment:</strong> {req.HR_Manager_Comment__c}</p>
+                                                </template>
+                                                <p class="slds-m-top_x-small"><strong>Description:</strong><br/>{req.Description__c}</p>
+                                            </div>
+                                            <div class="request-footer slds-m-top_medium slds-grid slds-grid_align-end slds-gutters_x-small">
+                                                <template if:true={req.isPending}>
+                                                    <div class="slds-col">
+                                                        <lightning-button label="Reject" variant="destructive-text" onclick={handleRequestAction} data-id={req.Id} data-action="Reject"></lightning-button>
+                                                    </div>
+                                                    <div class="slds-col">
+                                                        <lightning-button label="Forward" variant="neutral" onclick={handleRequestAction} data-id={req.Id} data-action="Forward"></lightning-button>
+                                                    </div>
+                                                </template>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </lightning-tab>
+
+            <!-- Tab 4: Tickets -->
+            <lightning-tab label="Hardware Tickets" icon-name="utility:bug">
+                <div class="slds-p-around_small">
+                    <div class="slds-grid slds-grid_align-spread slds-m-bottom_medium">
+                        <h2 class="slds-text-heading_small">Hardware Issues & Tickets</h2>
+                        <div class="slds-grid slds-grid_vertical-align-center">
+                            <div class="slds-m-right_small">
+                                <lightning-input type="search" variant="label-hidden" placeholder="Search by Employee Name..." value={ticketSearchKey} onchange={handleTicketSearch}></lightning-input>
+                            </div>
+                            <lightning-button-icon icon-name="utility:refresh" alternative-text="Refresh" onclick={loadTickets}></lightning-button-icon>
+                        </div>
+                    </div>
+
+                    <div if:true={ticketsLoading} class="slds-is-relative">
+                        <lightning-spinner size="small"></lightning-spinner>
+                    </div>
+
+                    <div if:false={ticketsLoading}>
+                        <template if:false={hasPendingTickets}>
+                            <div class="slds-text-align_center slds-p-around_medium slds-text-color_weak">
+                                No active hardware tickets found.
+                            </div>
+                        </template>
+                        <template if:true={hasPendingTickets}>
+                            <div class="slds-grid slds-wrap slds-gutters">
+                                <template for:each={pendingTickets} for:item="ticket">
+                                    <div key={ticket.Id} class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-3 slds-m-bottom_medium">
+                                        <div class="request-card">
+                                            <div class="request-header slds-grid slds-grid_align-spread">
+                                                <strong>{ticket.Name} - {ticket.Hardware__r.Name}</strong>
+                                                <span class={ticket.statusClass}>{ticket.Status__c}</span>
+                                            </div>
+                                            <div class="request-body slds-m-top_small">
+                                                 <p><strong>Employee:</strong> {ticket.Employee__r.Name}</p>
+                                                 <p><strong>Date:</strong> {ticket.formattedDate}</p>
+                                                 <p class="slds-m-top_x-small"><strong>Notes / Details:</strong><br/>{ticket.Notes__c}</p>
+                                             </div>
+                                             <div class="request-footer slds-m-top_medium slds-grid slds-grid_align-end slds-gutters_x-small">
+                                                 <template if:true={ticket.isOpen}>
+                                                     <div class="slds-col slds-m-top_x-small">
+                                                         <lightning-button label="Forward to HR/Manager" variant="neutral" onclick={handleTicketAction} data-id={ticket.Id} data-action="ForwardHR" class="slds-m-right_xx-small slds-m-bottom_xx-small"></lightning-button>
+                                                         <lightning-button label="Resolve & Close" variant="brand" onclick={handleTicketAction} data-id={ticket.Id} data-action="Resolve" class="slds-m-bottom_xx-small"></lightning-button>
+                                                     </div>
+                                                 </template>
+                                             </div>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </lightning-tab>
+
+            <!-- Tab 5: Solved Requests & Tickets -->
+            <lightning-tab label="Solved Requests & Tickets" icon-name="utility:task">
+                <div class="slds-p-around_small">
+                    <!-- Solved Requests Section -->
+                    <div class="slds-m-bottom_large">
+                        <h2 class="slds-text-heading_small slds-m-bottom_medium">Solved Requests</h2>
+                        <template if:false={hasSolvedRequests}>
+                            <div class="slds-text-align_center slds-p-around_medium slds-text-color_weak" style="border: 1px dashed #ccc; border-radius: 8px;">
+                                No solved hardware requests found.
+                            </div>
+                        </template>
+                        <template if:true={hasSolvedRequests}>
+                            <div class="slds-grid slds-wrap slds-gutters">
+                                <template for:each={solvedRequests} for:item="req">
+                                    <div key={req.Id} class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-3 slds-m-bottom_medium">
+                                        <div class="request-card" style="border-left: 4px solid #10b981;">
+                                            <div class="request-header slds-grid slds-grid_align-spread">
+                                                <strong>{req.Hardware_Type__c}</strong>
+                                                <span class={req.statusClass}>{req.Status__c}</span>
+                                            </div>
+                                            <div class="request-body slds-m-top_small">
+                                                <p><strong>Employee:</strong> {req.Employee__r.Name}</p>
+                                                <p><strong>Date:</strong> {req.formattedDate}</p>
+                                                <template if:true={req.Admin_Comment__c}>
+                                                    <p><strong>Admin Comment:</strong> {req.Admin_Comment__c}</p>
+                                                </template>
+                                                <template if:true={req.HR_Manager_Comment__c}>
+                                                    <p><strong>HR/Manager Comment:</strong> {req.HR_Manager_Comment__c}</p>
+                                                </template>
+                                                <p class="slds-m-top_x-small"><strong>Description:</strong><br/>{req.Description__c}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </template>
+                    </div>
+
+                    <!-- Solved Tickets Section -->
+                    <div>
+                        <h2 class="slds-text-heading_small slds-m-bottom_medium">Solved Tickets</h2>
+                        <template if:false={hasSolvedTickets}>
+                            <div class="slds-text-align_center slds-p-around_medium slds-text-color_weak" style="border: 1px dashed #ccc; border-radius: 8px;">
+                                No solved hardware tickets found.
+                            </div>
+                        </template>
+                        <template if:true={hasSolvedTickets}>
+                            <div class="slds-grid slds-wrap slds-gutters">
+                                <template for:each={solvedTickets} for:item="ticket">
+                                    <div key={ticket.Id} class="slds-col slds-size_1-of-1 slds-medium-size_1-of-2 slds-large-size_1-of-3 slds-m-bottom_medium">
+                                        <div class="request-card" style="border-left: 4px solid #10b981;">
+                                            <div class="request-header slds-grid slds-grid_align-spread">
+                                                <strong>{ticket.Name} - {ticket.Hardware__r.Name}</strong>
+                                                <span class={ticket.statusClass}>{ticket.Status__c}</span>
+                                            </div>
+                                            <div class="request-body slds-m-top_small">
+                                                <p><strong>Employee:</strong> {ticket.Employee__r.Name}</p>
+                                                <p><strong>Date:</strong> {ticket.formattedDate}</p>
+                                                <p class="slds-m-top_x-small"><strong>Notes / Details:</strong><br/>{ticket.Notes__c}</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </template>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </lightning-tab>
+        </lightning-tabset>
+
+        <!-- Edit Modal -->
+        <template if:true={isEditModalOpen}>
+            <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <header class="slds-modal__header">
+                        <lightning-button-icon class="slds-modal__close" icon-name="utility:close" alternative-text="Close" onclick={closeEditModal} variant="bare-inverse" size="large"></lightning-button-icon>
+                        <h2 class="slds-text-heading_medium">Edit Hardware</h2>
+                    </header>
+                    <div class="slds-modal__content slds-p-around_medium">
+                        <lightning-input label="Hardware Name" value={editName} onchange={handleEditNameChange} required></lightning-input>
+                        <lightning-combobox label="Hardware Type" value={editType} options={typeOptions} onchange={handleEditTypeChange} required class="slds-m-top_small"></lightning-combobox>
+                        <lightning-combobox label="Status" value={editStatus} options={editStatusOptions} onchange={handleEditStatusChange} class="slds-m-top_small" required></lightning-combobox>
+                        <lightning-record-picker label="Assign To" object-api-name="Contact" value={editAssignedToId} onchange={handleEditAssignChange} placeholder="Search for Employee..." class="slds-m-top_small"></lightning-record-picker>
+                        <lightning-combobox label="Location" value={editLocation} options={locationOptions} onchange={handleEditLocationChange} class="slds-m-top_small"></lightning-combobox>
+                        <lightning-input type="number" label="Year of Manufacture" value={editYearOfManufacture} onchange={handleEditYearChange} class="slds-m-top_small"></lightning-input>
+                        <lightning-input type="number" label="Expected Life Span (Years)" value={editExpectedLifeSpan} onchange={handleEditLifeSpanChange} class="slds-m-top_small"></lightning-input>
+                        <template if:true={isEditNotesRequired}>
+                            <lightning-textarea label="Notes" value={editNotes} onchange={handleEditNotesChange} class="slds-m-top_small" placeholder="Enter details for maintenance or retirement..."></lightning-textarea>
+                        </template>
+                        <template if:true={isEditLaptop}>
+                            <lightning-combobox label="Operating System" value={editOs} options={osOptions} onchange={handleEditOsChange} class="slds-m-top_small"></lightning-combobox>
+                            <lightning-input label="Username" value={editUsername} onchange={handleEditUsernameChange} class="slds-m-top_small"></lightning-input>
+                            <lightning-input type="password" label="Password" value={editPassword} onchange={handleEditPasswordChange} class="slds-m-top_small"></lightning-input>
+                        </template>
+
+                        <!-- Image Upload / Edit -->
+                        <div class="slds-m-top_small">
+                            <label style="display: block; font-size: 0.8rem; margin-bottom: 5px;">Hardware Image</label>
+                            <input 
+                                type="file" 
+                                accept="image/*"
+                                onchange={handleEditHardwarePicSelect}>
+                        </div>
+
+                        <template if:true={editShowCropper}>
+                            <div class="cropper-container" style="text-align: center; margin: 15px 0; background: #f9f9f9; padding: 15px; border-radius: 8px;">
+                                <p style="font-size: 0.85rem; color: #666; margin-bottom: 8px;">Drag image to pan. Use slider to zoom.</p>
+                                <div style="width: 200px; height: 200px; overflow: hidden; border-radius: 12px; margin: 0 auto; border: 2px solid #ccc; position: relative;">
+                                    <canvas class="edit-crop-canvas" width="200" height="200" lwc:dom="manual"
+                                        onmousedown={handleEditCropDragStart}
+                                        onmousemove={handleEditCropDragMove}
+                                        onmouseup={handleEditCropDragEnd}
+                                        onmouseleave={handleEditCropDragEnd}
+                                        ontouchstart={handleEditCropDragStart}
+                                        ontouchmove={handleEditCropDragMove}
+                                        ontouchend={handleEditCropDragEnd}
+                                        style="cursor: move; touch-action: none; background: #eee;">
+                                    </canvas>
+                                </div>
+                                <div style="margin-top: 15px; display: flex; align-items: center; justify-content: center; gap: 10px;">
+                                    <label style="font-size: 0.85rem;">Zoom:</label>
+                                    <input type="range" min="1" max="3" step="0.1" value={editCropScale} oninput={handleEditCropScale} style="width: 150px;">
+                                </div>
+                                <lightning-button label="Confirm Crop" variant="neutral" onclick={applyEditCrop} class="slds-m-top_medium"></lightning-button>
+                            </div>
+                        </template>
+
+                        <template if:true={editCroppedImageBase64}>
+                            <div style="text-align: center; margin: 15px 0;">
+                                <p style="font-size: 0.85rem; color: green; margin-bottom: 5px;">✓ New Image Selected</p>
+                                <img src={editCroppedImageBase64} style="width: 120px; height: 120px; border-radius: 8px; border: 2px solid #4CAF50;">
+                                <br>
+                                <button type="button" class="btn-text" onclick={removeEditHardwarePic} style="color: #d9534f; font-size: 0.8rem; border: none; background: none; cursor: pointer; margin-top: 8px;">Remove Image</button>
+                            </div>
+                        </template>
+
+                        <template if:false={editCroppedImageBase64}>
+                            <template if:true={editExistingImageUrl}>
+                                <div style="text-align: center; margin: 15px 0;">
+                                    <p style="font-size: 0.85rem; color: #666; margin-bottom: 5px;">Current Image</p>
+                                    <img src={editExistingImageUrl} style="width: 120px; height: 120px; border-radius: 8px; border: 2px solid #ccc; object-fit: cover;">
+                                </div>
+                            </template>
+                        </template>
+                    </div>
+                    <footer class="slds-modal__footer slds-grid slds-grid_align-spread">
+                        <lightning-button label="Delete Hardware" variant="destructive" onclick={handleDeleteHardware}></lightning-button>
+                        <div>
+                            <lightning-button label="Cancel" onclick={closeEditModal}></lightning-button>
+                            <lightning-button label="Save" variant="brand" onclick={saveEditHardware} class="slds-m-left_x-small"></lightning-button>
+                        </div>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </template>
+
+        <!-- View Details Modal -->
+        <template if:true={isDetailsModalOpen}>
+            <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <header class="slds-modal__header">
+                        <lightning-button-icon class="slds-modal__close" icon-name="utility:close" alternative-text="Close" onclick={closeDetailsModal} variant="bare-inverse" size="large"></lightning-button-icon>
+                        <h2 class="slds-text-heading_medium">Hardware Details</h2>
+                    </header>
+                    <div class="slds-modal__content slds-p-around_medium">
+                        <template if:true={selectedHardware}>
+                            <div class="slds-grid slds-wrap">
+                                <div class="slds-col slds-size_1-of-1 slds-text-align_center slds-m-bottom_medium">
+                                    <template if:true={selectedHardware.Image_URL__c}>
+                                        <img src={selectedHardware.Image_URL__c} style="width: 150px; height: 150px; border-radius: 8px; object-fit: cover;" />
+                                    </template>
+                                </div>
+                                <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+                                    <span class="slds-text-title slds-text-color_weak">Name</span>
+                                    <div class="slds-text-body_regular">{selectedHardware.Name}</div>
+                                </div>
+                                <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+                                    <span class="slds-text-title slds-text-color_weak">Type</span>
+                                    <div class="slds-text-body_regular">{selectedHardware.Type__c}</div>
+                                </div>
+                                <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+                                    <span class="slds-text-title slds-text-color_weak">Serial Number</span>
+                                    <div class="slds-text-body_regular">{selectedHardware.Serial_Number__c}</div>
+                                </div>
+                                <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+                                    <span class="slds-text-title slds-text-color_weak">Status</span>
+                                    <div class="slds-text-body_regular"><span class={selectedHardware.statusClass}>{selectedHardware.Status__c}</span></div>
+                                </div>
+                                <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+                                    <span class="slds-text-title slds-text-color_weak">Location</span>
+                                    <div class="slds-text-body_regular">{selectedHardware.Location__c}</div>
+                                </div>
+                                <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+                                    <span class="slds-text-title slds-text-color_weak">Assigned To</span>
+                                    <div class="slds-text-body_regular">
+                                        <template if:true={selectedHardware.Assigned_To__c}>{selectedHardware.Assigned_To__r.Name}</template>
+                                        <template if:false={selectedHardware.Assigned_To__c}>-</template>
+                                    </div>
+                                </div>
+                                <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+                                    <span class="slds-text-title slds-text-color_weak">Year of Manufacture</span>
+                                    <div class="slds-text-body_regular">{selectedHardware.Year_of_Manufacture__c}</div>
+                                </div>
+                                <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+                                    <span class="slds-text-title slds-text-color_weak">Expected Life Span</span>
+                                    <div class="slds-text-body_regular">{selectedHardware.Expected_Life_Span_Years__c} Years</div>
+                                </div>
+                                <template if:true={selectedHardware.Life_Span_Consumed_Percentage__c}>
+                                    <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+                                        <span class="slds-text-title slds-text-color_weak">Life Consumed</span>
+                                        <div class="slds-text-body_regular">{selectedHardware.Life_Span_Consumed_Percentage__c}%</div>
+                                    </div>
+                                </template>
+                                <template if:true={selectedHardware.OS__c}>
+                                    <div class="slds-col slds-size_1-of-2 slds-p-bottom_small">
+                                        <span class="slds-text-title slds-text-color_weak">Operating System</span>
+                                        <div class="slds-text-body_regular">{selectedHardware.OS__c}</div>
+                                    </div>
+                                </template>
+                            </div>
+                        </template>
+                    </div>
+                    <footer class="slds-modal__footer">
+                        <lightning-button label="Close" onclick={closeDetailsModal}></lightning-button>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </template>
+
+        <!-- Request Action Modal -->
+        <template if:true={isRequestActionModalOpen}>
+            <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <header class="slds-modal__header">
+                        <lightning-button-icon class="slds-modal__close" icon-name="utility:close" alternative-text="Close" onclick={closeRequestActionModal} variant="bare-inverse" size="large"></lightning-button-icon>
+                        <h2 class="slds-text-heading_medium">{requestActionType} Request</h2>
+                    </header>
+                    <div class="slds-modal__content slds-p-around_medium">
+                        <lightning-textarea label="Admin Comment (Required)" value={adminComment} onchange={handleAdminCommentChange} required></lightning-textarea>
+                    </div>
+                    <footer class="slds-modal__footer">
+                        <lightning-button label="Cancel" onclick={closeRequestActionModal}></lightning-button>
+                        <lightning-button label="Confirm" variant="brand" onclick={submitRequestAction} class="slds-m-left_x-small"></lightning-button>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </template>
+
+        <!-- Ticket Action Modal -->
+        <template if:true={isTicketActionModalOpen}>
+            <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <header class="slds-modal__header">
+                        <lightning-button-icon class="slds-modal__close" icon-name="utility:close" alternative-text="Close" onclick={closeTicketActionModal} variant="bare-inverse" size="large"></lightning-button-icon>
+                        <h2 class="slds-text-heading_medium">{ticketActionType} Ticket</h2>
+                    </header>
+                    <div class="slds-modal__content slds-p-around_medium">
+                        <lightning-textarea label="Admin Notes (Required)" value={adminTicketNote} onchange={handleAdminTicketNoteChange} required></lightning-textarea>
+                        
+                        <template if:true={isResolveAction}>
+                            <lightning-input type="checkbox" label="Create new hardware request and forward to HR" checked={createNewRequest} onchange={handleCreateNewRequestChange} class="slds-m-top_small"></lightning-input>
+                            <template if:true={createNewRequest}>
+                                <lightning-combobox label="Select Hardware Type" value={newRequestHwType} options={typeOptions} onchange={handleNewRequestHwTypeChange} required class="slds-m-top_small"></lightning-combobox>
+                            </template>
+                        </template>
+                    </div>
+                    <footer class="slds-modal__footer">
+                        <lightning-button label="Cancel" onclick={closeTicketActionModal}></lightning-button>
+                        <lightning-button label="Confirm" variant="brand" onclick={submitTicketAction} class="slds-m-left_x-small"></lightning-button>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </template>
+    </div>
+</template>

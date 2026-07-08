@@ -1,0 +1,239 @@
+/* Existing Styles */
+.header-hero {
+    background: linear-gradient(135deg, #ce2029 0%, #b31217 100%);
+    color: white;
+    padding: 1.5rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 0 0 12px 12px;
+    box-shadow: 0 4px 12px rgba(206, 32, 41, 0.2);
+    margin-bottom: 1rem;
+}
+
+.header-content h1 {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin: 0;
+    line-height: 1.2;
+}
+
+.header-sub {
+    font-size: 0.9rem;
+    opacity: 0.9;
+    font-weight: 300;
+}
+
+.profile-btn {
+    background: rgba(255,255,255,0.2);
+    border: 1px solid rgba(255,255,255,0.4);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.profile-btn:hover {
+    background: white;
+    color: #ce2029;
+}
+
+/* KPI CARDS */
+.kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.kpi-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    border-left: 4px solid #ddd;
+    transition: transform 0.2s;
+}
+
+.kpi-card:hover {
+    transform: translateY(-2px);
+}
+
+.kpi-card.accent-orange { border-left-color: #ff9f43; }
+.kpi-card.accent-red { border-left-color: #ee5253; }
+.kpi-card.accent-blue { border-left-color: #54a0ff; }
+
+.kpi-title {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    color: #636e72;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+.kpi-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #2d3436;
+    margin-top: 0.5rem;
+}
+
+/* SECTION CONTAINERS */
+.section-container {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    overflow: visible; /* Fix for dropdowns clipping */
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid #f1f2f6;
+    padding-bottom: 1rem;
+}
+
+.section-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #2d3436;
+}
+
+/* APPROVAL LIST */
+.approval-item {
+    border: 1px solid #dfe6e9;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    transition: all 0.2s;
+}
+
+.approval-item:hover {
+    border-color: #b2bec3;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+}
+
+.emp-name {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #2d3436;
+}
+
+.leave-info {
+    color: #636e72;
+    font-size: 0.9rem;
+}
+
+.leave-date-badge {
+    display: inline-block;
+    background: #f1f2f6;
+    color: #2d3436;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    margin-top: 0.5rem;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 3rem;
+    color: #b2bec3;
+}
+
+/* Override Datatable Header */
+.custom-table-wrapper {
+    border: 1px solid #dfe6e9;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* DROPDOWN OVERLAP FIX */
+.slds-dropdown {
+    z-index: 9000 !important;
+}
+
+/* HOLIDAY CARD STYLES (NEW) */
+.holiday-scroll-container {
+    height: 480px; 
+    overflow-y: auto;
+    padding-right: 4px; /* Space for scrollbar */
+}
+
+/* Custom Scrollbar */
+.holiday-scroll-container::-webkit-scrollbar {
+    width: 6px;
+}
+.holiday-scroll-container::-webkit-scrollbar-track {
+    background: #f1f2f6; 
+    border-radius: 4px;
+}
+.holiday-scroll-container::-webkit-scrollbar-thumb {
+    background: #b2bec3; 
+    border-radius: 4px;
+}
+.holiday-scroll-container::-webkit-scrollbar-thumb:hover {
+    background: #636e72; 
+}
+
+.holiday-card {
+    background: white;
+    border: 1px solid #dfe6e9;
+    border-radius: 8px; /* Rounded corners */
+    padding: 1rem 0.5rem;
+    text-align: center;
+    transition: transform 0.2s, box-shadow 0.2s;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.holiday-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    border-color: #ce2029; /* Highlight color on hover */
+}
+
+/* Date Date Box Styling */
+.h-date-box {
+    margin-bottom: 0.5rem;
+}
+.h-date {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: #ce2029; /* CRMantra Red */
+    line-height: 1;
+}
+.h-month {
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #636e72;
+    margin-top: 2px;
+}
+
+/* Holiday Name & Day */
+.h-name {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: #2d3436;
+    margin-top: 4px;
+    line-height: 1.2;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.h-day {
+    font-size: 0.75rem;
+    color: #636e72;
+    margin-top: 2px;
+}

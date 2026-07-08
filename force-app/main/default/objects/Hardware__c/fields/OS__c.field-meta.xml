@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>OS__c</fullName>
+    <description>Operating System installed on the hardware</description>
+    <externalId>false</externalId>
+    <label>Operating System</label>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Windows 10</fullName>
+                <default>false</default>
+                <label>Windows 10</label>
+            </value>
+            <value>
+                <fullName>Windows 11</fullName>
+                <default>false</default>
+                <label>Windows 11</label>
+            </value>
+            <value>
+                <fullName>macOS Sonoma</fullName>
+                <default>false</default>
+                <label>macOS Sonoma</label>
+            </value>
+            <value>
+                <fullName>macOS Ventura</fullName>
+                <default>false</default>
+                <label>macOS Ventura</label>
+            </value>
+            <value>
+                <fullName>Ubuntu Linux</fullName>
+                <default>false</default>
+                <label>Ubuntu Linux</label>
+            </value>
+            <value>
+                <fullName>ChromeOS</fullName>
+                <default>false</default>
+                <label>ChromeOS</label>
+            </value>
+            <value>
+                <fullName>None / N/A</fullName>
+                <default>false</default>
+                <label>None / N/A</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

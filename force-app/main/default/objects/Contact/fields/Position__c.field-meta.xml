@@ -1,0 +1,491 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Position__c</fullName>
+    <externalId>false</externalId>
+    <label>Position</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <type>MultiselectPicklist</type>
+    <valueSet>
+        <restricted>false</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>CEO</fullName>
+                <default>false</default>
+                <label>CEO</label>
+            </value>
+            <value>
+                <fullName>CTO</fullName>
+                <default>false</default>
+                <label>CTO</label>
+            </value>
+            <value>
+                <fullName>CIO</fullName>
+                <default>false</default>
+                <label>CIO</label>
+            </value>
+            <value>
+                <fullName>COO</fullName>
+                <default>false</default>
+                <label>COO</label>
+            </value>
+            <value>
+                <fullName>CFO</fullName>
+                <default>false</default>
+                <label>CFO</label>
+            </value>
+            <value>
+                <fullName>CISO</fullName>
+                <default>false</default>
+                <label>CISO</label>
+            </value>
+            <value>
+                <fullName>VP of Engineering</fullName>
+                <default>false</default>
+                <label>VP of Engineering</label>
+            </value>
+            <value>
+                <fullName>VP of Product</fullName>
+                <default>false</default>
+                <label>VP of Product</label>
+            </value>
+            <value>
+                <fullName>VP of Sales</fullName>
+                <default>false</default>
+                <label>VP of Sales</label>
+            </value>
+            <value>
+                <fullName>Director of Engineering</fullName>
+                <default>false</default>
+                <label>Director of Engineering</label>
+            </value>
+            <value>
+                <fullName>Director of Product</fullName>
+                <default>false</default>
+                <label>Director of Product</label>
+            </value>
+            <value>
+                <fullName>Director of Sales</fullName>
+                <default>false</default>
+                <label>Director of Sales</label>
+            </value>
+            <value>
+                <fullName>Engineering Manager</fullName>
+                <default>false</default>
+                <label>Engineering Manager</label>
+            </value>
+            <value>
+                <fullName>Development Manager</fullName>
+                <default>false</default>
+                <label>Development Manager</label>
+            </value>
+            <value>
+                <fullName>Project Manager</fullName>
+                <default>false</default>
+                <label>Project Manager</label>
+            </value>
+            <value>
+                <fullName>Product Manager</fullName>
+                <default>false</default>
+                <label>Product Manager</label>
+            </value>
+            <value>
+                <fullName>Product Owner</fullName>
+                <default>false</default>
+                <label>Product Owner</label>
+            </value>
+            <value>
+                <fullName>Program Manager</fullName>
+                <default>false</default>
+                <label>Program Manager</label>
+            </value>
+            <value>
+                <fullName>Delivery Manager</fullName>
+                <default>false</default>
+                <label>Delivery Manager</label>
+            </value>
+            <value>
+                <fullName>Team Lead</fullName>
+                <default>false</default>
+                <label>Team Lead</label>
+            </value>
+            <value>
+                <fullName>Technical Lead</fullName>
+                <default>false</default>
+                <label>Technical Lead</label>
+            </value>
+            <value>
+                <fullName>Scrum Master</fullName>
+                <default>false</default>
+                <label>Scrum Master</label>
+            </value>
+            <value>
+                <fullName>Software Engineer</fullName>
+                <default>false</default>
+                <label>Software Engineer</label>
+            </value>
+            <value>
+                <fullName>Software Developer</fullName>
+                <default>false</default>
+                <label>Software Developer</label>
+            </value>
+            <value>
+                <fullName>Frontend Developer</fullName>
+                <default>false</default>
+                <label>Frontend Developer</label>
+            </value>
+            <value>
+                <fullName>Backend Developer</fullName>
+                <default>false</default>
+                <label>Backend Developer</label>
+            </value>
+            <value>
+                <fullName>Full Stack Developer</fullName>
+                <default>false</default>
+                <label>Full Stack Developer</label>
+            </value>
+            <value>
+                <fullName>Mobile App Developer</fullName>
+                <default>false</default>
+                <label>Mobile App Developer</label>
+            </value>
+            <value>
+                <fullName>Web Developer</fullName>
+                <default>false</default>
+                <label>Web Developer</label>
+            </value>
+            <value>
+                <fullName>Salesforce Developer</fullName>
+                <default>false</default>
+                <label>Salesforce Developer</label>
+            </value>
+            <value>
+                <fullName>Salesforce Technical Lead</fullName>
+                <default>false</default>
+                <label>Salesforce Technical Lead</label>
+            </value>
+            <value>
+                <fullName>DevOps Engineer</fullName>
+                <default>false</default>
+                <label>DevOps Engineer</label>
+            </value>
+            <value>
+                <fullName>Site Reliability Engineer (SRE)</fullName>
+                <default>false</default>
+                <label>Site Reliability Engineer (SRE)</label>
+            </value>
+            <value>
+                <fullName>Solution Architect</fullName>
+                <default>false</default>
+                <label>Solution Architect</label>
+            </value>
+            <value>
+                <fullName>Enterprise Architect</fullName>
+                <default>false</default>
+                <label>Enterprise Architect</label>
+            </value>
+            <value>
+                <fullName>Technical Architect</fullName>
+                <default>false</default>
+                <label>Technical Architect</label>
+            </value>
+            <value>
+                <fullName>Cloud Architect</fullName>
+                <default>false</default>
+                <label>Cloud Architect</label>
+            </value>
+            <value>
+                <fullName>Salesforce Architect</fullName>
+                <default>false</default>
+                <label>Salesforce Architect</label>
+            </value>
+            <value>
+                <fullName>QA Engineer</fullName>
+                <default>false</default>
+                <label>QA Engineer</label>
+            </value>
+            <value>
+                <fullName>QA Analyst</fullName>
+                <default>false</default>
+                <label>QA Analyst</label>
+            </value>
+            <value>
+                <fullName>Automation Test Engineer</fullName>
+                <default>false</default>
+                <label>Automation Test Engineer</label>
+            </value>
+            <value>
+                <fullName>Manual Test Engineer</fullName>
+                <default>false</default>
+                <label>Manual Test Engineer</label>
+            </value>
+            <value>
+                <fullName>Performance Test Engineer</fullName>
+                <default>false</default>
+                <label>Performance Test Engineer</label>
+            </value>
+            <value>
+                <fullName>Data Analyst</fullName>
+                <default>false</default>
+                <label>Data Analyst</label>
+            </value>
+            <value>
+                <fullName>Data Engineer</fullName>
+                <default>false</default>
+                <label>Data Engineer</label>
+            </value>
+            <value>
+                <fullName>Data Scientist</fullName>
+                <default>false</default>
+                <label>Data Scientist</label>
+            </value>
+            <value>
+                <fullName>Machine Learning Engineer</fullName>
+                <default>false</default>
+                <label>Machine Learning Engineer</label>
+            </value>
+            <value>
+                <fullName>AI Engineer</fullName>
+                <default>false</default>
+                <label>AI Engineer</label>
+            </value>
+            <value>
+                <fullName>Business Intelligence (BI) Developer</fullName>
+                <default>false</default>
+                <label>Business Intelligence (BI) Developer</label>
+            </value>
+            <value>
+                <fullName>Cloud Engineer</fullName>
+                <default>false</default>
+                <label>Cloud Engineer</label>
+            </value>
+            <value>
+                <fullName>System Administrator</fullName>
+                <default>false</default>
+                <label>System Administrator</label>
+            </value>
+            <value>
+                <fullName>Network Administrator</fullName>
+                <default>false</default>
+                <label>Network Administrator</label>
+            </value>
+            <value>
+                <fullName>Database Administrator (DBA)</fullName>
+                <default>false</default>
+                <label>Database Administrator (DBA)</label>
+            </value>
+            <value>
+                <fullName>Infrastructure Engineer</fullName>
+                <default>false</default>
+                <label>Infrastructure Engineer</label>
+            </value>
+            <value>
+                <fullName>Platform Engineer</fullName>
+                <default>false</default>
+                <label>Platform Engineer</label>
+            </value>
+            <value>
+                <fullName>Security Engineer</fullName>
+                <default>false</default>
+                <label>Security Engineer</label>
+            </value>
+            <value>
+                <fullName>Security Analyst</fullName>
+                <default>false</default>
+                <label>Security Analyst</label>
+            </value>
+            <value>
+                <fullName>Security Consultant</fullName>
+                <default>false</default>
+                <label>Security Consultant</label>
+            </value>
+            <value>
+                <fullName>Penetration Tester</fullName>
+                <default>false</default>
+                <label>Penetration Tester</label>
+            </value>
+            <value>
+                <fullName>SOC Analyst</fullName>
+                <default>false</default>
+                <label>SOC Analyst</label>
+            </value>
+            <value>
+                <fullName>UI Designer</fullName>
+                <default>false</default>
+                <label>UI Designer</label>
+            </value>
+            <value>
+                <fullName>UX Designer</fullName>
+                <default>false</default>
+                <label>UX Designer</label>
+            </value>
+            <value>
+                <fullName>UI/UX Designer</fullName>
+                <default>false</default>
+                <label>UI/UX Designer</label>
+            </value>
+            <value>
+                <fullName>Graphic Designer</fullName>
+                <default>false</default>
+                <label>Graphic Designer</label>
+            </value>
+            <value>
+                <fullName>Multimedia Content Creator</fullName>
+                <default>false</default>
+                <label>Multimedia Content Creator</label>
+            </value>
+            <value>
+                <fullName>Motion Graphics Designer</fullName>
+                <default>false</default>
+                <label>Motion Graphics Designer</label>
+            </value>
+            <value>
+                <fullName>Video Editor</fullName>
+                <default>false</default>
+                <label>Video Editor</label>
+            </value>
+            <value>
+                <fullName>Business Analyst</fullName>
+                <default>false</default>
+                <label>Business Analyst</label>
+            </value>
+            <value>
+                <fullName>Technical Consultant</fullName>
+                <default>false</default>
+                <label>Technical Consultant</label>
+            </value>
+            <value>
+                <fullName>Functional Consultant</fullName>
+                <default>false</default>
+                <label>Functional Consultant</label>
+            </value>
+            <value>
+                <fullName>Salesforce Consultant</fullName>
+                <default>false</default>
+                <label>Salesforce Consultant</label>
+            </value>
+            <value>
+                <fullName>Technical Support Engineer</fullName>
+                <default>false</default>
+                <label>Technical Support Engineer</label>
+            </value>
+            <value>
+                <fullName>Customer Success Manager</fullName>
+                <default>false</default>
+                <label>Customer Success Manager</label>
+            </value>
+            <value>
+                <fullName>Account Manager</fullName>
+                <default>false</default>
+                <label>Account Manager</label>
+            </value>
+            <value>
+                <fullName>Sales Executive</fullName>
+                <default>false</default>
+                <label>Sales Executive</label>
+            </value>
+            <value>
+                <fullName>Sales Manager</fullName>
+                <default>false</default>
+                <label>Sales Manager</label>
+            </value>
+            <value>
+                <fullName>Pre-Sales Engineer</fullName>
+                <default>false</default>
+                <label>Pre-Sales Engineer</label>
+            </value>
+            <value>
+                <fullName>Solution Consultant</fullName>
+                <default>false</default>
+                <label>Solution Consultant</label>
+            </value>
+            <value>
+                <fullName>HR Executive</fullName>
+                <default>false</default>
+                <label>HR Executive</label>
+            </value>
+            <value>
+                <fullName>HR Manager</fullName>
+                <default>false</default>
+                <label>HR Manager</label>
+            </value>
+            <value>
+                <fullName>Recruiter</fullName>
+                <default>false</default>
+                <label>Recruiter</label>
+            </value>
+            <value>
+                <fullName>Talent Acquisition Specialist</fullName>
+                <default>false</default>
+                <label>Talent Acquisition Specialist</label>
+            </value>
+            <value>
+                <fullName>Office Administrator</fullName>
+                <default>false</default>
+                <label>Office Administrator</label>
+            </value>
+            <value>
+                <fullName>Marketing Executive</fullName>
+                <default>false</default>
+                <label>Marketing Executive</label>
+            </value>
+            <value>
+                <fullName>Digital Marketing Specialist</fullName>
+                <default>false</default>
+                <label>Digital Marketing Specialist</label>
+            </value>
+            <value>
+                <fullName>SEO Specialist</fullName>
+                <default>false</default>
+                <label>SEO Specialist</label>
+            </value>
+            <value>
+                <fullName>Content Writer</fullName>
+                <default>false</default>
+                <label>Content Writer</label>
+            </value>
+            <value>
+                <fullName>Social Media Manager</fullName>
+                <default>false</default>
+                <label>Social Media Manager</label>
+            </value>
+            <value>
+                <fullName>Accountant</fullName>
+                <default>false</default>
+                <label>Accountant</label>
+            </value>
+            <value>
+                <fullName>Finance Manager</fullName>
+                <default>false</default>
+                <label>Finance Manager</label>
+            </value>
+            <value>
+                <fullName>Intern</fullName>
+                <default>false</default>
+                <label>Intern</label>
+            </value>
+            <value>
+                <fullName>Software Engineer Trainee</fullName>
+                <default>false</default>
+                <label>Software Engineer Trainee</label>
+            </value>
+            <value>
+                <fullName>Graduate Trainee</fullName>
+                <default>false</default>
+                <label>Graduate Trainee</label>
+            </value>
+            <value>
+                <fullName>Associate Software Engineer</fullName>
+                <default>false</default>
+                <label>Associate Software Engineer</label>
+            </value>
+            <value>
+                <fullName>Junior Developer</fullName>
+                <default>false</default>
+                <label>Junior Developer</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+    <visibleLines>4</visibleLines>
+</CustomField>

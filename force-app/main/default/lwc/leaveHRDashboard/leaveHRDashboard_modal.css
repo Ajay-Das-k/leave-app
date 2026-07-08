@@ -1,0 +1,165 @@
+/* Enhanced Modal Styling */
+.modal-enhanced {
+    max-width: 90%;
+    width: 1200px;
+}
+
+.modal-header-enhanced {
+    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    color: white;
+    padding: 1.5rem 2rem;
+    border-radius: 12px 12px 0 0;
+    position: relative;
+}
+
+.modal-close-btn {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.modal-close-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.1);
+}
+
+.modal-header-content {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.header-icon {
+    --slds-c-icon-color-background: rgba(255, 255, 255, 0.25);
+    --slds-c-icon-color-foreground: white;
+    padding: 0.5rem;
+    border-radius: 8px;
+}
+
+.modal-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0;
+    line-height: 1.2;
+}
+
+.modal-subtitle {
+    font-size: 0.9rem;
+    opacity: 0.9;
+    margin: 0.25rem 0 0 0;
+}
+
+/* Stats Banner */
+.stats-banner {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    background: rgba(255, 255, 255, 0.15);
+    padding: 1rem 1.5rem;
+    border-radius: 8px;
+    backdrop-filter: blur(10px);
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.stat-item lightning-icon {
+    --slds-c-icon-color-foreground: white;
+}
+
+.stat-value {
+    font-size: 1.75rem;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.stat-label {
+    font-size: 0.85rem;
+    opacity: 0.9;
+    font-weight: 500;
+}
+
+.stat-divider {
+    width: 1px;
+    height: 30px;
+    background: rgba(255, 255, 255, 0.3);
+}
+
+/* Enhanced Content */
+.modal-content-enhanced {
+    padding: 0 !important;
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+.table-wrapper-enhanced {
+    padding: 1.5rem;
+}
+
+/* Enhanced Table Styles */
+.enhanced-table {
+    --slds-c-datatable-header-color-background: #f8fafc;
+    --slds-c-datatable-row-color-background-hover: #f1f5f9;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+/* Enhanced Empty State */
+.empty-state-enhanced {
+    text-align: center;
+    padding: 4rem 2rem;
+    color: #64748b;
+}
+
+.empty-state-enhanced lightning-icon {
+    --slds-c-icon-color-foreground: #cbd5e1;
+    margin-bottom: 1.5rem;
+}
+
+.empty-state-enhanced h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #334155;
+    margin: 0 0 0.5rem 0;
+}
+
+.empty-state-enhanced p {
+    font-size: 0.95rem;
+    margin: 0;
+}
+
+/* Cancelled Modal - Red Theme */
+.modal-header-cancelled {
+    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+}
+
+/* Animation */
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.modal-enhanced {
+    animation: slideDown 0.3s ease-out;
+}
