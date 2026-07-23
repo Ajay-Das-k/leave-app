@@ -1,48 +1,41 @@
-# 🌴 Leave & 💻 Hardware Management Portal
+# 🌴 WorkSync - Leave & Hardware Management Portal
 
-Welcome to the **Leave & Hardware Management App**—a modern, high-fidelity Employee Self-Service portal built natively on the Salesforce platform using high-performance **Lightning Web Components (LWC)** and a secure **Apex backend**.
+Welcome to **WorkSync**—a modern, high-fidelity Employee Self-Service portal built natively on the Salesforce platform using high-performance **Lightning Web Components (LWC)** and a secure **Apex backend**.
 
 Designed for enterprise-level operations, this portal streamlines employee leave planning, automates hardware request workflows, resolves hardware tickets, and enforces high-security server-side checks.
 
 ---
 
-## 🎨 User Dashboards Preview
+## 🛠️ Complete Feature Directory
 
-### HR Admin Dashboard
-The comprehensive HR dashboard allows administrators to manage leave metrics, track employee statuses, allocate hardware inventory, and manage roles.
-![HR Admin Dashboard](docs/images/hr_admin_dashboard.png)
+### 1. 🎫 End-to-End Hardware Ticketing & Support System (Core Module)
+WorkSync includes an enterprise-grade hardware ticketing module designed to bridge the gap between employee hardware issues, technical system administration, and HR provisioning.
+* **Employee Ticketing Portal:** Employees can raise support tickets for any of their assigned hardware items (e.g., Laptops, Monitors, Keyboards) by entering details about issues, malfunctions, or damage.
+* **Technical System Admin (TSA) Control Hub:** Dedicated TSA queues collect and segment tickets. TSAs have special access rights to triage, add remarks, and resolve tickets.
+* **One-Click Ticket-to-Request Conversion:** If a ticket represents a hardware failure that requires replacement, TSAs or Admins can trigger a modal that automatically converts the support ticket into a formal **Hardware Request** forwarded directly to HR with a single click.
+  * The system copies description text, employee details, and context.
+  * It transitions the ticket status to `Resolved (Request Created)` and creates a new hardware request in `Pending HR Approval` status.
+* **Outbound Email Alerts:** Changes to ticket status (Triaged, In Progress, Converted, Resolved) trigger automatic transactional email notifications to the employee and TSA.
 
-### Hardware Ticket-to-Request Conversion
-Administrators can easily resolve hardware tickets and automatically spin up a new hardware request forwarded to HR for provisioning.
-![Hardware Conversion Dialog](docs/images/hardware_conversion.png)
+### 2. 🌴 Comprehensive Leave Management
+* **Flexible Leave Types:** Complete support for Annual/Earned, Casual, Sick, Maternity (180 days), Paternity (5 days), Bereavement, and Marriage leave.
+* **Smart Validation Engine:** Automatically validates gender constraints (e.g. Maternity for Females), checks for overlapping leave request dates, blocks applications exceeding available balances, and enforces proper notice periods.
+* **Leave Auto-Approval Hierarchy:** Implements multi-tier approvals. Managers approve their team's requests, while HR Admins approve managers' requests and can directly assign leaves.
+* **Loss of Pay (LOP) Warning System:** Displays real-time warnings to employees if their requested leave duration exceeds their current balance, warning them of LOP salary deductions.
 
----
+### 3. 🔐 Portal Authentication & Security Middleware
+* **Secure Guest Login Suite:** Because the portal is hosted on an Experience Cloud guest site, logins are validated securely via custom Apex password hashing (`SHA-256`) and verification algorithms.
+* **Forced Default Password Reset:** Newly created employees are assigned a default credentials pattern and are forced to immediately reset their password upon their first login before they can access any dashboards.
+* **Session Integrity & Anti-Privilege Escalation:** Bypasses client-side session modifications (e.g., trying to modify local storage roles to access admin tabs) by re-validating the user's caller ID directly against the Salesforce database on every single server-side operation using `SecurityMiddleware.cls`.
 
-## 🚀 Key Portal Features
+### 4. 📊 HR & Manager Administration Dashboards
+* **Employee Roster Management:** HR Admins can create new employees, update details, adjust active statuses, and configure managers.
+* **Inventory Allocation Control:** HR and Managers can view employee-wise hardware allocation logs, assign inventory serials, and track fulfillment metrics.
+* **Company Policy Circulars:** HR Admins can edit and post official circular policies. Employees are greeted with an HR Circular board stating date, circular ID, and standard policies.
 
-### 1. 🌴 Comprehensive Leave Management
-* **Flexible Leave Types**: Supports Annual/Earned, Casual, Sick, Maternity (180 days), Paternity (5 days), Bereavement, and Marriage leave.
-* **Smart Validation Engine**: Enforces gender-based maternity/paternity validation, automatically handles half-day requests (FN/AN sessions), and blocks overlapping dates.
-* **Auto-Approval Hierarchy**: Managers approve employee requests, while HR approves manager requests and can directly mark leave for colleagues.
-
-### 2. 💻 End-to-End Hardware Lifecycle
-* **Self-Service Requests**: Employees can request new hardware (Laptops, Monitors, CPU, etc.) with reason details.
-* **Ticketing Support**: Employees submit issue tickets for assigned hardware.
-* **TSA & Admin Queues**: Technical System Admins (TSA) filter and queue tickets, forwarding them to HR or resolving them locally.
-* **Admin Conversion Modal**: Convert employee issue tickets directly into a new **Hardware Request** forwarded to HR with one click.
-* **Fulfillment & Delivery**: Approved hardware requests feature a **Deliver** action, changing status to `Fulfilled` and updating inventory.
-
-### 3. 🛡️ Server-Side Security Middleware (Anti-Privilege Escalation)
-* **Real-time Role Verification**: Validates the logged-in user directly against the database (`Portal_Access_Type__c` and `Is_Technical_System_Admin__c`).
-* **Session Integrity**: Bypasses client-side session modifications (e.g. attempting to change local storage role to `HR Admin`) by re-validating the caller ID on every single server operation.
-* **Secured Controllers**: Both `LeaveController.cls` and `HardwareController.cls` are audited and secured via a centralized `SecurityMiddleware.cls` interceptor.
-
-### 4. ✉️ Trigger-Based Email Notifications
-* Automatically fires transactional emails to the **Employee**, **Manager**, **HR**, and **Admin** on critical lifecycle events:
-  * New hardware ticket or request submission.
-  * Ticket-to-Request conversion.
-  * Status updates (Approval / Rejection).
-  * Delivery and fulfillment.
+### 5. ✉️ Trigger-Based Automation & Reporting
+* **Transactional Email Triggers:** Outbound email triggers alert employees and managers immediately upon critical events (new requests, approvals, ticketing updates, and serial allocations).
+* **Automated Monthly Reports:** A scheduled Apex job (`LeaveReportScheduler`) automatically compiles a monthly leave summary CSV and emails it to the HR distribution list.
 
 ---
 
@@ -104,7 +97,7 @@ Because the virtual login page executes within the Experience Cloud **Guest User
    ```powershell
    sf apex run --file "grant_guest_access.apex"
    ```
-2. Alternatively, navigate to **Setup** > **Digital Experiences** > **Pages** > Click **WorkSync** > Open the **Guest User Profile** and add the following classes to **Enabled Apex Class Access**:
+2. Alternatively, navigate to **Setup** > **Digital Experiences** > **Pages** > Click **Leave_app** > Open the **Guest User Profile** and add the following classes to **Enabled Apex Class Access**:
    * `PaybookLoginController`
    * `PaybookSignupController`
    * `LeaveController`
