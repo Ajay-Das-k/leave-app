@@ -6,6 +6,18 @@ Designed for enterprise-level operations, this portal streamlines employee leave
 
 ---
 
+## 📸 WorkSync Portal Interface Preview
+
+### 1. HR Admin Dashboard
+The comprehensive HR dashboard allows administrators to manage leave metrics, track employee statuses, allocate hardware inventory, and manage roles.
+![HR Admin Dashboard](docs/images/hr_admin_dashboard.png)
+
+### 2. Hardware Ticket-to-Request Conversion
+Administrators can easily resolve hardware tickets and automatically spin up a new hardware request forwarded to HR for provisioning in a single click.
+![Hardware Conversion Dialog](docs/images/hardware_conversion.png)
+
+---
+
 ## 🛠️ Complete Feature Directory
 
 ### 1. 🎫 End-to-End Hardware Ticketing & Support System (Core Module)
