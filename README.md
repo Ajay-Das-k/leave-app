@@ -37,6 +37,63 @@ WorkSync includes an enterprise-grade hardware ticketing module designed to brid
 * **Transactional Email Triggers:** Outbound email triggers alert employees and managers immediately upon critical events (new requests, approvals, ticketing updates, and serial allocations).
 * **Automated Monthly Reports:** A scheduled Apex job (`LeaveReportScheduler`) automatically compiles a monthly leave summary CSV and emails it to the HR distribution list.
 
+
+---
+
+## 🔄 End-to-End Hardware Support & Ticketing Lifecycle Flow
+
+WorkSync automates the entire lifecycle of hardware maintenance, triaging, and replacement. The full operational flow is structured as follows:
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor Employee
+    actor TSA as Tech System Admin (TSA)
+    actor HR as HR Admin
+    database DB as Salesforce Database
+
+    Employee->>DB: 1. Raises Issue Ticket against assigned hardware
+    Note over Employee,DB: Ticket Status: New
+    DB-->>TSA: 2. Ticket appears in TSA Triaging Queue
+    TSA->>DB: 3. Updates Status (e.g. In Progress) & adds remarks
+    
+    alt Local Fix Possible
+        TSA->>DB: 4a. Resolves ticket locally
+        Note over TSA,DB: Ticket Status: Resolved
+        DB-->>Employee: Send email: Ticket Resolved
+    else Hardware Replacement Needed
+        TSA->>DB: 4b. Clicks "Convert to Request" action
+        Note over TSA,DB: Ticket Status: Resolved (Request Created)
+        DB->>DB: 5. System automatically generates a new Hardware Request
+        Note over DB: Request Status: Pending HR Approval
+        DB-->>HR: 6. Request appears in HR Approval Queue
+        HR->>DB: 7. Approves request & allocates device serial number
+        Note over HR,DB: Request Status: Approved
+        HR->>DB: 8. Clicks "Deliver" upon physical handover
+        Note over HR,DB: Request Status: Fulfilled
+        DB->>DB: 9. Updates Employee Assets (deallocates old, assigns new)
+        DB-->>Employee: Send email: Hardware Delivered & Fulfilled
+    end
+```
+
+### Detailed Flow Walkthrough:
+
+1. **Step 1: Ticket Submission (Employee)**
+   - When a hardware item becomes faulty, the employee accesses their self-service dashboard, chooses the problematic asset, inputs issue notes (e.g., "damaged port", "overheating"), and submits a ticket. A new record is registered in `New` status.
+2. **Step 2: Triaging & Investigation (TSA)**
+   - The ticket appears inside the **TSA Triage Queue**. Technical System Admins inspect the details and transition the status to `In Progress` while reviewing diagnostics.
+3. **Step 3: One-Click Request Conversion (Tech Admin)**
+   - If the device is unfixable, the TSA clicks **Convert to Request** on their dashboard. WorkSync automatically:
+     - Retires the ticket by setting it to `Resolved (Request Created)`.
+     - Automatically provisions a new **Hardware Request** record pre-populated with the employee's ID, details, and device type.
+     - Routes the new request to the HR queue in `Pending HR Approval` status.
+4. **Step 4: Inventory Allocation & Approval (HR Admin)**
+   - The HR Admin inspects the request. Upon approval, the HR Admin selects a specific serial number from the available device inventory to allocate to the employee.
+5. **Step 5: Handover & Asset Swapping (Fulfillment)**
+   - Once the new hardware is handed over to the employee, the HR Admin clicks **Deliver**. The request transitions to `Fulfilled`. The system deallocates the faulty device from the employee's asset list and replaces it with the newly assigned serial device.
+6. **Step 6: Outbound Email Alerts**
+   - Outbound transactional emails are triggered at every milestone, keeping the Employee, Manager, TSA, and HR aligned on the resolution progress.
+
 ---
 
 ## 🗺️ System Architecture
