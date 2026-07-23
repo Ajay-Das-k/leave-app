@@ -327,12 +327,24 @@ public without sharing class PaybookLoginController {
             Id conDocId = [SELECT ContentDocumentId FROM ContentVersion WHERE Id =:cv.Id LIMIT 1].ContentDocumentId;
             
             // Create ContentDocumentLink
-            ContentDocumentLink cdl = new ContentDocumentLink();
-            cdl.ContentDocumentId = conDocId;
-            cdl.LinkedEntityId = contactId;
-            cdl.ShareType = 'I';
-            cdl.Visibility = 'AllUsers';
-            insert cdl;
+            try {
+                ContentDocumentLink cdl = new ContentDocumentLink();
+                cdl.ContentDocumentId = conDocId;
+                cdl.LinkedEntityId = contactId;
+                cdl.ShareType = 'I';
+                cdl.Visibility = 'AllUsers';
+                insert cdl;
+            } catch (Exception linkEx) {
+                try {
+                    ContentDocumentLink cdlFallback = new ContentDocumentLink();
+                    cdlFallback.ContentDocumentId = conDocId;
+                    cdlFallback.LinkedEntityId = contactId;
+                    cdlFallback.ShareType = 'I';
+                    insert cdlFallback;
+                } catch (Exception linkEx2) {
+                    System.debug('ContentDocumentLink creation failed: ' + linkEx2.getMessage());
+                }
+            }
             
             String picUrl;
             try {
