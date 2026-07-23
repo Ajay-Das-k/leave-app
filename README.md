@@ -8,12 +8,24 @@ Designed for enterprise-level operations, this portal streamlines employee leave
 
 ## 📸 WorkSync Portal Interface Preview
 
-### 1. HR Admin Dashboard
+### 1. Employee Self-Service Dashboard
+The employee dashboard provides self-service features for submitting leave requests, tracking leave balances, viewing holidays, and raising hardware tickets.
+![Employee Dashboard](docs/images/employee_dashboard.png)
+
+### 2. Manager Approval Dashboard
+Managers can track team availability, manage pending leave requests, approve/reject leaves, and review team statistics.
+![Manager Dashboard](docs/images/manager_dashboard.png)
+
+### 3. HR Admin Dashboard
 The comprehensive HR dashboard allows administrators to manage leave metrics, track employee statuses, allocate hardware inventory, and manage roles.
 ![HR Admin Dashboard](docs/images/hr_admin_dashboard.png)
 
-### 2. Hardware Ticket-to-Request Conversion
-Administrators can easily resolve hardware tickets and automatically spin up a new hardware request forwarded to HR for provisioning in a single click.
+### 4. Technical System Admin (TSA) Dashboard
+TSAs can view, triage, resolve, and forward hardware tickets in their queue.
+![TSA Dashboard](docs/images/tsa_dashboard.png)
+
+### 5. Hardware Ticket-to-Request Conversion Dialog
+TSAs and Admins can easily resolve hardware tickets and automatically spin up a new hardware request forwarded to HR for provisioning in a single click.
 ![Hardware Conversion Dialog](docs/images/hardware_conversion.png)
 
 ---
