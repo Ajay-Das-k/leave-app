@@ -334,20 +334,25 @@ public without sharing class PaybookLoginController {
             cdl.Visibility = 'AllUsers';
             insert cdl;
             
-            // Create Public Link via ContentDistribution
-            ContentDistribution cd = new ContentDistribution();
-            cd.Name = fileName;
-            cd.ContentVersionId = cv.Id;
-            cd.PreferencesAllowViewInBrowser = true;
-            cd.PreferencesLinkLatestVersion = true;
-            cd.PreferencesNotifyOnVisit = false;
-            cd.PreferencesPasswordRequired = false;
-            cd.PreferencesAllowOriginalDownload = true;
-            insert cd;
-            
-            // Query the generated public URL
-            ContentDistribution insertedCd = [SELECT ContentDownloadUrl FROM ContentDistribution WHERE Id = :cd.Id LIMIT 1];
-            String picUrl = insertedCd.ContentDownloadUrl;
+            String picUrl;
+            try {
+                // Create Public Link via ContentDistribution (Admin context)
+                ContentDistribution cd = new ContentDistribution();
+                cd.Name = fileName;
+                cd.ContentVersionId = cv.Id;
+                cd.PreferencesAllowViewInBrowser = true;
+                cd.PreferencesLinkLatestVersion = true;
+                cd.PreferencesNotifyOnVisit = false;
+                cd.PreferencesPasswordRequired = false;
+                cd.PreferencesAllowOriginalDownload = true;
+                insert cd;
+                
+                ContentDistribution insertedCd = [SELECT ContentDownloadUrl FROM ContentDistribution WHERE Id = :cd.Id LIMIT 1];
+                picUrl = insertedCd.ContentDownloadUrl;
+            } catch (Exception distEx) {
+                // Fallback for Community Users who lack CreatePublicLinks permission
+                picUrl = '/sfc/servlet.shepherd/version/download/' + cv.Id;
+            }
             
             // Update Contact Profile_Picture_URL__c
             Contact emp = new Contact(Id = contactId);
