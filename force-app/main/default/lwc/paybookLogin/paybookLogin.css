@@ -58,7 +58,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(135deg, rgba(211, 47, 47, 0.92) 0%, rgba(136, 14, 7, 0.95) 100%);
+    background: linear-gradient(135deg, rgba(30, 41, 59, 0.92) 0%, rgba(15, 23, 42, 0.95) 100%);
     z-index: 1;
 }
 
@@ -84,7 +84,7 @@
 
 .logo-icon-red {
     background: #fee2e2;
-    color: #ef4444;
+    color: #0f172a;
     padding: 8px;
     border-radius: 8px;
     display: flex;
@@ -162,8 +162,8 @@
 .input-wrapper input:focus,
 .input-wrapper select:focus {
     outline: none;
-    border-color: #ef4444;
-    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+    border-color: #0f172a;
+    box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.15);
 }
 
 .input-wrapper select {
@@ -219,8 +219,8 @@
 }
 
 .checkbox-container input:checked ~ .checkmark {
-    background-color: #ef4444;
-    border-color: #ef4444;
+    background-color: #0f172a;
+    border-color: #0f172a;
 }
 
 .checkmark:after {
@@ -244,14 +244,14 @@
 }
 
 .forgot-link {
-    color: #ef4444;
+    color: #0f172a;
     font-weight: 600;
     text-decoration: none;
     transition: color 0.2s ease;
 }
 
 .forgot-link:hover {
-    color: #dc2626;
+    color: #334155;
     text-decoration: underline;
 }
 
@@ -259,7 +259,7 @@
 .login-submit-btn {
     width: 100%;
     padding: 12px;
-    background: #ef4444;
+    background: #0f172a;
     color: #ffffff;
     border: none;
     border-radius: 8px;
@@ -273,8 +273,8 @@
 }
 
 .login-submit-btn:hover:not(:disabled) {
-    background: #dc2626;
-    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25);
+    background: #334155;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.25);
 }
 
 .login-submit-btn:disabled {
@@ -306,7 +306,7 @@
 }
 
 .switch-mode-footer a {
-    color: #ef4444;
+    color: #0f172a;
     font-weight: 600;
     text-decoration: none;
 }
@@ -319,7 +319,7 @@
 .error-message {
     background: #fef2f2;
     color: #b91c1c;
-    border-left: 4px solid #ef4444;
+    border-left: 4px solid #0f172a;
     padding: 12px;
     border-radius: 6px;
     margin-bottom: 20px;
@@ -427,7 +427,7 @@
 }
 
 .btn-remove-pic {
-    color: #ef4444;
+    color: #0f172a;
     background: transparent;
     border: none;
     font-size: 11.5px;
@@ -519,7 +519,7 @@
 .app-dot {
     position: absolute;
     background: #ffffff;
-    color: #ef4444;
+    color: #0f172a;
     width: 32px;
     height: 32px;
     border-radius: 50%;
