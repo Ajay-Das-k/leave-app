@@ -4,13 +4,20 @@
 }
 
 .app-header {
-    background: linear-gradient(135deg, #D32F2F 0%, #B71C1C 100%);
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
     color: white;
     padding: 0;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     position: sticky;
     top: 0;
     z-index: 100;
+}
+
+.header-logo {
+    height: 40px;
+    width: auto;
+    object-fit: contain;
+    display: block;
 }
 
 .header-content {

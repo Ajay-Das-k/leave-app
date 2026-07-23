@@ -1,9 +1,14 @@
 import { LightningElement, track } from 'lwc';
+import companyLogo from '@salesforce/resourceUrl/CompanyLogo';
 
 export default class PaybookApp extends LightningElement {
     @track isLoggedIn = false;
     @track showUnauthorized = false;
     @track currentUser = null;
+    
+    get companyLogoUrl() {
+        return companyLogo;
+    }
 
     // Role flags for conditional rendering
     @track isEmployee = false;
