@@ -153,12 +153,12 @@ graph TD
 
 To test the application locally or inside your staging environment, use the virtual sign-in credentials listed below:
 
-| Role | Employee ID | Default Password | Name |
+| Role | Employee ID | Active Password | Name |
 | :--- | :--- | :--- | :--- |
 | **HR Admin** | `CT50` | `Welcome@HR50` | Aleena Mathews |
 | **Manager** | `CT01` | `Welcome@Manager01` | John Kumar |
-| **Employee** | `CT432` | `WELCOME@ajayCreation12` | Sam |
-| **System Admin (TSA)** | `CT101` | `WELCOME@ajayCreation12` | JackSparrow |
+| **Employee** | `CT432` | `Sam@NewPassword123` | Sam |
+| **System Admin (TSA)** | `CT101` | `Jack@NewPassword123` | JackSparrow |
 
 ---
 
